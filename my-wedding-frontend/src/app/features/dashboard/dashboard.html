@@ -1,0 +1,190 @@
+<div class="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header con selector de boda -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-serif font-bold text-gray-800 mb-2 flex items-center">
+        <svg class="h-10 w-10 text-rose-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+        </svg>
+        Dashboard de Bodas
+      </h1>
+      <p class="text-gray-600 ml-13">Gestiona y visualiza toda la información de tus eventos</p>
+    </div>
+
+    <!-- Selector de Boda -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border-2 border-rose-200">
+      <label for="wedding-select" class="block text-sm font-semibold text-gray-700 mb-3">
+        Selecciona una boda para ver su información:
+      </label>
+      <select
+        id="wedding-select"
+        [value]="selectedWeddingId"
+        (change)="onWeddingChange($event)"
+        class="w-full px-4 py-3 border-2 border-rose-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-gray-700 font-medium bg-white hover:border-rose-400 transition-colors cursor-pointer">
+        @for (wedding of weddings; track wedding.id) {
+          <option [value]="wedding.id">
+            {{ wedding.groomName }} & {{ wedding.brideName }} - {{ wedding.date }}
+          </option>
+        }
+      </select>
+    </div>
+
+    @if (selectedWedding) {
+      <!-- Información de los novios -->
+      <div class="bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl shadow-lg p-8 mb-8 text-white">
+        <div class="text-center">
+          <div class="flex justify-center mb-4">
+            <svg class="h-16 w-16" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <h2 class="text-3xl font-serif font-bold mb-2">
+            {{ selectedWedding.groomName }} & {{ selectedWedding.brideName }}
+          </h2>
+          <p class="text-rose-100 text-lg mb-4">{{ selectedWedding.date }}</p>
+          <div class="flex justify-center items-center text-rose-50">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span>{{ selectedWedding.location }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas principales -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Invitaciones -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-rose-500 hover:shadow-lg transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-600 text-sm font-medium mb-1">Total Invitaciones</p>
+              <p class="text-3xl font-bold text-gray-800">{{ stats.totalInvitations }}</p>
+            </div>
+            <div class="bg-rose-100 rounded-full p-3">
+              <svg class="h-8 w-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Invitados -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-600 text-sm font-medium mb-1">Total Invitados</p>
+              <p class="text-3xl font-bold text-gray-800">{{ stats.totalGuests }}</p>
+            </div>
+            <div class="bg-purple-100 rounded-full p-3">
+              <svg class="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirmados -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-600 text-sm font-medium mb-1">Confirmados</p>
+              <p class="text-3xl font-bold text-gray-800">{{ stats.confirmedGuests }}</p>
+            </div>
+            <div class="bg-green-100 rounded-full p-3">
+              <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Confirmados -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500 hover:shadow-lg transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-gray-600 text-sm font-medium mb-1">No Confirmados</p>
+              <p class="text-3xl font-bold text-gray-800">{{ stats.notConfirmedGuests }}</p>
+            </div>
+            <div class="bg-amber-100 rounded-full p-3">
+              <svg class="h-8 w-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de confirmación -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+          <svg class="h-6 w-6 text-rose-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          Estado de Confirmaciones
+        </h3>
+
+        <div class="space-y-4">
+          <!-- Barra de progreso -->
+          <div>
+            <div class="flex justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700">Progreso de confirmación</span>
+              <span class="text-sm font-bold text-rose-600">{{ confirmationPercentage }}%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+              <div
+                class="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                [style.width.%]="confirmationPercentage">
+                @if (confirmationPercentage > 10) {
+                  <span class="text-xs font-bold text-white">{{ confirmationPercentage }}%</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Leyenda -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            <div class="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
+              <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+              <div>
+                <p class="text-sm text-gray-600">Confirmados</p>
+                <p class="text-lg font-bold text-gray-800">{{ stats.confirmedGuests }} personas</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-3 p-4 bg-amber-50 rounded-lg">
+              <div class="w-4 h-4 bg-amber-500 rounded-full"></div>
+              <div>
+                <p class="text-sm text-gray-600">Pendientes</p>
+                <p class="text-lg font-bold text-gray-800">{{ stats.notConfirmedGuests }} personas</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen rápido -->
+      <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl shadow-lg p-8 border-2 border-purple-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <svg class="h-6 w-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Resumen de la Boda
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-700">
+          <div>
+            <p class="text-sm font-medium text-purple-600 mb-1">Novios</p>
+            <p class="font-semibold">{{ selectedWedding.groomName }} & {{ selectedWedding.brideName }}</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-purple-600 mb-1">Fecha del Evento</p>
+            <p class="font-semibold">{{ selectedWedding.date }}</p>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-purple-600 mb-1">Capacidad</p>
+            <p class="font-semibold">{{ stats.totalGuests }} invitados esperados</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

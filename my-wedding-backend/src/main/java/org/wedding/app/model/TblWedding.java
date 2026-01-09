@@ -24,4 +24,7 @@ public class TblWedding {
     @Column(name = "bride_name", nullable = false)
     private String brideName;
 
+    @Column(name = "status")
+    private Boolean status;
+
 }
