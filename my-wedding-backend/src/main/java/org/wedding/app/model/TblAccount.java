@@ -2,6 +2,7 @@ package org.wedding.app.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -21,9 +22,15 @@ public class TblAccount {
     @Enumerated(EnumType.STRING)
     private AccountRole role;
 
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
     @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "status",columnDefinition = "boolean default true")
+    private Boolean status;
 }
