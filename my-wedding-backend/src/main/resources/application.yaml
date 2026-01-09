@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: wedding-invitations-app
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:wedding-invitations.db
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
