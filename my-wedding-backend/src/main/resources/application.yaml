@@ -2,10 +2,19 @@ spring:
   application:
     name: wedding-invitations-app
   datasource:
-    driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite:wedding-invitations.db
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/my_wedding_app_db
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 4
+      pool-name: WeddingAppHikariCP
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   jpa:
-    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect\
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
+

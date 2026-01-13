@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface TblAccountRepository extends JpaRepository<TblAccount,Integer> {
 
-    boolean existsByUsername(String username);
 
-    List<TblAccount> findByStatus(boolean status);
 }
