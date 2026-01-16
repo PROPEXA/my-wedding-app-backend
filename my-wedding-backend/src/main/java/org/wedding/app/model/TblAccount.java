@@ -1,13 +1,16 @@
 package org.wedding.app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -15,48 +18,52 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "tbl_accounts")
+@EntityListeners(AuditingEntityListener.class)
 public class TblAccount {
-
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tbl_accounts_id_gen")
+    @SequenceGenerator(name = "tbl_accounts_id_gen", sequenceName = "seq_tbl_accounts", allocationSize = 1)
+    @Column(name = "acc_id", nullable = false)
     private Integer id;
 
-    @Column(name = "first_name", nullable = false, length = 50)
-    private String firstName;
+    @Size(max = 40)
+    @NotNull
+    @Column(name = "acc_email", nullable = false, length = 40)
+    private String accEmail;
 
-    @Column(name = "last_name", nullable = false, length = 50)
-    private String lastName;
+    @Size(max = 1)
+    @NotNull
+    @Column(name = "acc_emailconf", nullable = false, length = 1)
+    private String accEmailconf;
 
-    @Column(name = "email", nullable = false, length = 50, unique = true)
-    private String email;
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "acc_password", nullable = false, length = 100)
+    private String accPassword;
 
-    @ColumnDefault("N")
-    @Column(name = "email_verified", nullable = false, length = 1)
-    private String emailVerified;
-
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
-
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
-
-    @ColumnDefault("A")
-    @Column(name = "status", length = 4)
-    private String status;
+    @Size(max = 1)
+    @ColumnDefault("'A'")
+    @Column(name = "acc_status", length = 1)
+    private String accStatus;
 
     @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "acc_register")
+    private Instant accRegister;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "acc_updated")
+    private Instant accUpdated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "language_id", nullable = false)
-    private TblLanguage language;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "acc_user", nullable = false)
+    private TblUser accUser;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "acc_lang", nullable = false)
+    private TblLanguage accLang;
 
 }

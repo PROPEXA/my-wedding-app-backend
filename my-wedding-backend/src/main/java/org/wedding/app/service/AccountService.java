@@ -1,14 +1,15 @@
 package org.wedding.app.service;
 
-import java.util.List;
+import org.wedding.app.dto.AccountDto;
+import org.wedding.app.dto.PasswordUpd;
 
 public interface AccountService {
 
-//    Integer registerNewAccount(AccountDto accountDto);
-//
-//    AccountDto getAccountById(Integer id);
-//
-//    List<AccountDto> getAllAccountsByStatus(boolean status);
-//
-//    void disableAccountById(int accountId);
+    Integer saveAccount(AccountDto accountDto);
+
+    void updateAccount(AccountDto accountDto);
+
+    void updatePassword(PasswordUpd accountDto);
+
+    void confirmEmail(String token);
 }
