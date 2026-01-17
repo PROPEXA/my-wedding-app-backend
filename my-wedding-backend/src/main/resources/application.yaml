@@ -36,7 +36,11 @@ spring:
     host: ${EMAIL_HOST}
     username: ${EMAIL_USER}
     password: ${EMAIL_PASS}
+    port: 587
     properties:
       "[mail.smtp.timeout]": 10000
       "[mail.smtp.connectiontimeout]": 10000
       "[mail.smtp.writetimeout]": 10000
+      "[mail.smtp.starttls.enable]" : true,
+      "[mail.smtp.starttls.required]" : true
+

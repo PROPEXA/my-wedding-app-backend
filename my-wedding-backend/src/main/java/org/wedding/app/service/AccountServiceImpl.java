@@ -1,12 +1,14 @@
 package org.wedding.app.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wedding.app.dto.AccountDto;
 import org.wedding.app.dto.PasswordUpd;
+import org.wedding.app.event.AccountCreatedEvent;
 import org.wedding.app.exception.ServiceException;
 import org.wedding.app.mapper.AccountMapper;
 import org.wedding.app.mapper.UserMapper;
@@ -25,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final TblUserRepository tblUserRepository;
     private final TblLanguageRepository tblLanguageRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -45,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
         tblAccount.setAccLang(tblLanguage);
 
         TblAccount persistedAccount = tblAccountRepository.save(tblAccount);
+        eventPublisher.publishEvent(new AccountCreatedEvent(this, persistedAccount));
         return persistedAccount.getId();
     }
 
