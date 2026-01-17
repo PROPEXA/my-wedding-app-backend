@@ -1,7 +1,7 @@
 spring:
   security:
     jwt:
-      secretKey: 3bfaa3e8057fee94827a7749d561b20146937d32e2b784c496347a0ca1235136
+      secretKey: ${JWT_SECRET_KEY}
       token:
         # 1 day
         expiration: 3600000
@@ -12,20 +12,31 @@ spring:
   application:
     name: wedding-invitations-app
     version: @project.version@
+
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/db_my_wedding_app
-    username: postgres
-    password: postgres
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 4
       pool-name: WeddingAppHikariCP
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
     show-sql: true
 
+  mail:
+    host: ${EMAIL_HOST}
+    username: ${EMAIL_USER}
+    password: ${EMAIL_PASS}
+    properties:
+      "[mail.smtp.timeout]": 10000
+      "[mail.smtp.connectiontimeout]": 10000
+      "[mail.smtp.writetimeout]": 10000
