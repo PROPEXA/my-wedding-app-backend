@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/0001-initial-definition-db.sql
+  - include:
+      file: db/changelog/0002-token-repository.sql

@@ -1,6 +1,8 @@
 package org.wedding.app.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wedding.app.dto.AuthenticationResponse;
 import org.wedding.app.dto.UsernamePassword;
+import org.wedding.app.exception.ServiceException;
 import org.wedding.app.model.TblAccount;
 import org.wedding.app.model.TblRefreshToken;
+import org.wedding.app.repository.TblAccountRepository;
 import org.wedding.app.repository.TblRefreshTokenRepository;
 import org.wedding.app.security.JwtService;
 
@@ -23,6 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final TblRefreshTokenRepository tblRefreshTokenRepository;
+    private final TblAccountRepository tblAccountRepository;
     private final JwtService jwtService;
 
     @Override
@@ -40,6 +45,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         saveUserToken(refreshToken, tblAccount.getId());
 
         return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX, LocalDateTime.now());
+    }
+
+    @Override
+    public AuthenticationResponse refreshToken(HttpServletRequest request) {
+
+        final String authHeader = request.getHeader("Authorization");
+        final String refreshToken;
+        final String email;
+
+        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX + " ")) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Refresh token no encontrado, proporcionalo");
+        }
+        refreshToken = authHeader.substring(7);
+        email = jwtService.extractUsername(refreshToken);
+
+        if (email == null) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Refresh token invalido");
+        }
+
+        boolean isTokenValid = tblRefreshTokenRepository.findByTkToken(refreshToken)
+                .map(t -> t.getTkExpired().equalsIgnoreCase("N")
+                        && t.getTkRevoked().equalsIgnoreCase("N"))
+                .orElse(false);
+
+        if (jwtService.isTokenValid(refreshToken) && isTokenValid) {
+            TblAccount tblAccount = tblAccountRepository.findByAccEmailIgnoreCase(email)
+                    .orElseThrow(() -> new ServiceException(HttpStatus.UNAUTHORIZED, "No se pudo validar la identidad del usuario"));
+            final String accessToken = jwtService.generateToken(tblAccount);
+            return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX, LocalDateTime.now());
+        } else {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Sesión expirada, vuelve a identificarte");
+        }
     }
 
     private void revokeAllUserTokens(TblAccount tblAccount) {

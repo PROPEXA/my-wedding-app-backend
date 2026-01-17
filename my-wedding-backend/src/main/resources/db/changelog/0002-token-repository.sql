@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+
+-- changeset alexandevcwa:0002
 create table tbl_refresh_token
 (
     tk_id       varchar(36) primary key,

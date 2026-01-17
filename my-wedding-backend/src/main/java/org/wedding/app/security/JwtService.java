@@ -19,13 +19,13 @@ public class JwtService {
 
     public static final String TOKEN_PREFIX = "Bearer ";
 
-    @Value("${application.security.jwt.secret-key}")
+    @Value("${spring.security.jwt.secretKey}")
     private String secretKey;
 
-    @Value("${application.security.jwt.token.expiration}")
+    @Value("${spring.security.jwt.token.expiration}")
     private Long tokenExpiration;
 
-    @Value("${application.security.jwt.refresh-token.expiration}")
+    @Value("${spring.security.jwt.refreshToken.expiration}")
     private Long refreshTokenExpiration;
 
     // 1.0 GENERATE TOKEN
