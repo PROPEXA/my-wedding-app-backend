@@ -17,6 +17,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    public static final String TOKEN_PREFIX = "Bearer ";
+
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
@@ -48,9 +50,9 @@ public class JwtService {
     }
 
     // 2. VALIDATE TOKEN
-    public boolean isTokenValid(String token, TblAccount userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getAccEmail()) && !isTokenExpired(token));
+    public boolean isTokenValid(String token) {
+
+        return !isTokenExpired(token);
     }
 
     // 3. EXTRACT USERNAME (CLAIMS)
