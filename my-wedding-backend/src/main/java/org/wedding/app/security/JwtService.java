@@ -11,31 +11,51 @@ import org.wedding.app.model.TblAccount;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
+    public static final String TOKEN_PREFIX = "Bearer ";
+
+    @Value("${spring.security.jwt.secretKey}")
     private String secretKey;
 
-    // 1. GENERACIÓN DEL TOKEN
+    @Value("${spring.security.jwt.token.expiration}")
+    private Long tokenExpiration;
+
+    @Value("${spring.security.jwt.refreshToken.expiration}")
+    private Long refreshTokenExpiration;
+
+    // 1.0 GENERATE TOKEN
     public String generateToken(TblAccount userDetails) {
+        return buildToken(null, userDetails, tokenExpiration);
+    }
+
+    // 1.1 GENERATE REFRESH TOKEN
+    public String generateRefreshToken(TblAccount userDetails) {
+        return buildToken(null, userDetails, refreshTokenExpiration);
+    }
+
+    private String buildToken(Map<String, Object> extraClaims,
+                              TblAccount account,
+                              long expiration) {
         return Jwts.builder()
-                .setSubject(userDetails.getAccEmail())
+                .setSubject(account.getAccEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
+                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // 10 horas
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // 2. VALIDACIÓN DEL TOKEN
-    public boolean isTokenValid(String token, TblAccount userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getAccEmail()) && !isTokenExpired(token));
+    // 2. VALIDATE TOKEN
+    public boolean isTokenValid(String token) {
+
+        return !isTokenExpired(token);
     }
 
-    // 3. EXTRACCIÓN DE DATOS (CLAIMS)
+    // 3. EXTRACT USERNAME (CLAIMS)
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }

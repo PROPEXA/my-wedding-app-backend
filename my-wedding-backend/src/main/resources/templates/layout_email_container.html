@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(contenidoCentral)">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Wedding App Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wedding: {
+                            gold: "#D4AF37", // Dorado clásico
+                            goldlight: "#F3E5AB", // Crema suave
+                            dark: "#2D2D2D", // Gris oscuro elegante
+                            bg: "#F9FAFB", // Fondo gris muy claro
+                        },
+                    },
+                    fontFamily: {
+                        serif: ["Georgia", "Times New Roman", "serif"], // Para títulos elegantes
+                        sans: ["Helvetica", "Arial", "sans-serif"], // Para lectura fácil
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        /* Estilos base para asegurar compatibilidad en clientes de correo antiguos */
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 my-0 mx-0 py-10 px-4 antialiased">
+<div
+        class="max-w-2xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 font-sans"
+>
+    <div class="bg-white p-8 text-center border-b border-gray-100">
+        <div class="mb-3 flex justify-center">
+            <svg
+                    class="w-12 h-12 text-wedding-gold"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+            </svg>
+        </div>
+        <h1
+                class="text-2xl md:text-3xl font-serif text-wedding-dark tracking-wide  font-semibold"
+        >
+            My Wedding App <span class="text-wedding-gold">Online</span>
+        </h1>
+        <p class="text-gray-400 text-xs tracking-widest mt-1 uppercase">
+            Tu boda, en tus manos
+        </p>
+    </div>
+
+    <div
+            id="dynamic-content-container"
+            class="p-8 md:p-10 text-gray-600 leading-relaxed text-base"
+    >
+
+        <!-- Insert all content here from others layout files -->
+        <div th:replace="${contenidoCentral}"></div>
+
+
+    </div>
+    <div class="bg-gray-50 p-6 text-center border-t border-gray-100">
+        <div class="flex justify-center space-x-4 mb-4">
+            <a href="#" class="text-gray-400 hover:text-wedding-gold"
+            >Instagram</a
+            >
+            <span class="text-gray-300">|</span>
+            <a href="#" class="text-gray-400 hover:text-wedding-gold">Facebook</a>
+        </div>
+
+        <p class="text-gray-400 text-xs mb-2">
+            Recibiste este correo porque estás registrado en My Wedding App
+            Online.
+        </p>
+        <p class="text-gray-400 text-xs">
+            &copy; 2026 My Wedding App Online. Todos los derechos reservados.
+        </p>
+
+        <div class="mt-4">
+            <a href="#" class="text-xs text-wedding-gold hover:underline"
+            >Darse de baja</a
+            >
+        </div>
+    </div>
+</div>
+
+<div class="h-10"></div>
+</body>
+</html>
