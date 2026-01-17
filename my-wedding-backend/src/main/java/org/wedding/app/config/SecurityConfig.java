@@ -1,4 +1,4 @@
-package org.wedding.app.controller;
+package org.wedding.app.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

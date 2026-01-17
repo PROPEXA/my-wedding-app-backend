@@ -11,6 +11,7 @@ spring:
 
   application:
     name: wedding-invitations-app
+    version: @project.version@
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/db_my_wedding_app
