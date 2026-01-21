@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 public class ThreadPoolConf {
     public static final String THREAD_POOL_NAME = "my-wedding-thread-pool";
 
-    @Bean
+    @Bean(name = THREAD_POOL_NAME)
     Executor executor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);

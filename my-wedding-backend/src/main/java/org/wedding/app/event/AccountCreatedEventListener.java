@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -17,9 +18,7 @@ public class AccountCreatedEventListener {
     private final EmailNotification emailNotification;
     private final TemplateEngine templateEngine;
 
-    @Value("${spring.mail.username}")
-    String from;
-
+    @Async
     @EventListener
     public void onApplicationEvent(AccountCreatedEvent event) {
         Context context = new Context();
@@ -27,7 +26,7 @@ public class AccountCreatedEventListener {
                 + " " + event.getTblAccount().getAccUser().getUsrLastname();
         context.setVariable("fullName", fullName);
         String htmlContent = templateEngine.process("layout_email_account_created", context);
-        emailNotification.sendEmailAsync(from, event.getTblAccount().getAccEmail(), "Tu cuenta ha sido creada", htmlContent)
+        emailNotification.sendEmailAsync(event.getTblAccount().getAccEmail(), "Tu cuenta ha sido creada", htmlContent)
                 .join();
     }
 

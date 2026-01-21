@@ -9,9 +9,12 @@
 </head>
 <body>
 <div th:fragment="frg_mensaje_bienvenida">
-    <h2 class="text-xl font-serif text-gray-800 mb-4" th:text="${fullName}"></h2>
-    <p class="mb-6">
-        Nos alegra informarte que tu cuenta fue registrada exitosamente, recibiras otro correo para hacer la
+
+    <h1 class="script-title">Cuenta Creada</h1>
+
+    <p class="body-text">
+        Hola <strong th:text="${fullName}"></strong>,<br><br>
+        Nos alegra informarte que tu cuenta fue registrada exitosamente, recibirás otro correo para hacer la
         confirmación de tu cuenta.
     </p>
 </div>

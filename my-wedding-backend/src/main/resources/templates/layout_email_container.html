@@ -1,122 +1,172 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(contenidoCentral)">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Wedding App Online</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        wedding: {
-                            gold: "#D4AF37", // Dorado clásico
-                            goldlight: "#F3E5AB", // Crema suave
-                            dark: "#2D2D2D", // Gris oscuro elegante
-                            bg: "#F9FAFB", // Fondo gris muy claro
-                        },
-                    },
-                    fontFamily: {
-                        serif: ["Georgia", "Times New Roman", "serif"], // Para títulos elegantes
-                        sans: ["Helvetica", "Arial", "sans-serif"], // Para lectura fácil
-                    },
-                },
-            },
-        };
-    </script>
     <style>
-        /* Estilos base para asegurar compatibilidad en clientes de correo antiguos */
+        /* Importamos Great Vibes (Manuscrita) y Montserrat (Moderna) */
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap');
+
+        /* Reset y Estilos Base */
         body {
             margin: 0;
             padding: 0;
+            background-color: #fcf5f7;
+            width: 100% !important;
             -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
         }
 
-        table,
-        td {
+        table {
             border-collapse: collapse;
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
         }
 
-        img {
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
+        /* Estilos Principales */
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #fcf5f7;
+            padding: 40px 0;
+        }
+
+        .card {
+            background-color: #ffffff;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(224, 176, 182, 0.15); /* Sombra rosada muy sutil */
+            overflow: hidden;
+            border: 1px solid #f2e6e8;
+        }
+
+        /* Tipografía */
+        .script-title {
+            font-family: 'Great Vibes', 'Brush Script MT', cursive; /* Fallback seguro */
+            color: #b0657b; /* Rosa viejo oscuro */
+            font-size: 48px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin: 10px 0;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            color: #dcb3bc; /* Rosa pastel elegante */
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .body-text {
+            font-family: 'Montserrat', sans-serif;
+            color: #5a5a5a;
+            font-size: 15px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin: 0 0 25px 0;
+        }
+
+        /* Botón Moderno y Minimalista */
+        .btn-elegant {
+            background-color: #b0657b;
+            color: #ffffff !important;
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 15px 40px;
             text-decoration: none;
-            -ms-interpolation-mode: bicubic;
+            border-radius: 50px; /* Completamente redondo */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(176, 101, 123, 0.3);
+        }
+
+        .footer-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            color: #a8a8a8;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Decoración */
+        .divider {
+            height: 1px;
+            background-color: #f0f0f0;
+            width: 60%;
+            margin: 30px auto;
+        }
+
+        /* Mobile */
+        @media screen and (max-width: 600px) {
+            .wrapper {
+                padding: 10px 0;
+            }
+
+            .card {
+                width: 95% !important;
+                border-radius: 8px;
+            }
+
+            .script-title {
+                font-size: 36px !important;
+            }
+
+            .content-cell {
+                padding: 30px 20px !important;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 my-0 mx-0 py-10 px-4 antialiased">
-<div
-        class="max-w-2xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 font-sans"
->
-    <div class="bg-white p-8 text-center border-b border-gray-100">
-        <div class="mb-3 flex justify-center">
-            <svg
-                    class="w-12 h-12 text-wedding-gold"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-            </svg>
-        </div>
-        <h1
-                class="text-2xl md:text-3xl font-serif text-wedding-dark tracking-wide  font-semibold"
-        >
-            My Wedding App <span class="text-wedding-gold">Online</span>
-        </h1>
-        <p class="text-gray-400 text-xs tracking-widest mt-1 uppercase">
-            Tu boda, en tus manos
-        </p>
-    </div>
+<body>
+<center class="wrapper">
+    <table class="card" cellpadding="0" cellspacing="0">
+        <tr>
+            <td height="6" style="background: linear-gradient(90deg, #fcecef 0%, #dcb3bc 50%, #fcecef 100%);"></td>
+        </tr>
 
-    <div
-            id="dynamic-content-container"
-            class="p-8 md:p-10 text-gray-600 leading-relaxed text-base"
-    >
+        <tr>
+            <td class="content-cell" align="center" style="padding: 50px 60px;">
+                <div class="subtitle">MY WEDDING APP ONLINE</div>
 
-        <!-- Insert all content here from others layout files -->
-        <div th:replace="${contenidoCentral}"></div>
+                <div th:replace="${contenidoCentral}"></div>
 
 
-    </div>
-    <div class="bg-gray-50 p-6 text-center border-t border-gray-100">
-        <div class="flex justify-center space-x-4 mb-4">
-            <a href="#" class="text-gray-400 hover:text-wedding-gold"
-            >Instagram</a
-            >
-            <span class="text-gray-300">|</span>
-            <a href="#" class="text-gray-400 hover:text-wedding-gold">Facebook</a>
-        </div>
+<!--                <p class="body-text">-->
+<!--                    Sería un honor que confirmaras tu asistencia y nos acompañaras en este nuevo capítulo de nuestras-->
+<!--                    vidas.-->
+<!--                </p>-->
 
-        <p class="text-gray-400 text-xs mb-2">
-            Recibiste este correo porque estás registrado en My Wedding App
-            Online.
-        </p>
-        <p class="text-gray-400 text-xs">
-            &copy; 2026 My Wedding App Online. Todos los derechos reservados.
-        </p>
+<!--                <table width="100%" border="0" cellspacing="0" cellpadding="0"-->
+<!--                       style="margin-top: 35px; margin-bottom: 10px;">-->
+<!--                    <tr>-->
+<!--                        <td align="center">-->
+<!--                            <a href="#" class="btn-elegant">Confirmar Asistencia</a>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+            </td>
+        </tr>
 
-        <div class="mt-4">
-            <a href="#" class="text-xs text-wedding-gold hover:underline"
-            >Darse de baja</a
-            >
-        </div>
-    </div>
-</div>
+        <tr>
+            <td align="center" style="padding: 0 40px 40px 40px;">
+                <div class="divider"></div>
+                <p class="footer-text">Notificación<br>
+                    © 2026 My Wedding App Online
+                </p>
+                <p class="footer-text" style="font-style: italic; color: #dcb3bc;">"El amor es la poesía de los
+                    sentidos"</p>
+            </td>
+        </tr>
+    </table>
+</center>
 
-<div class="h-10"></div>
 </body>
+
 </html>

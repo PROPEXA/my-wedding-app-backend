@@ -3,6 +3,7 @@ package org.wedding.app.notification;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -20,12 +21,18 @@ public class EmailNotification extends AbstractEmailNotification {
 
     private final JavaMailSender javaMailSender;
 
+    @Value("${spring.mail.username}")
+    String from;
+
+    @Value("${spring.mail.origin}")
+    String fromOrigin;
+
     @Async(THREAD_POOL_NAME)
-    public CompletableFuture<Boolean> sendEmailAsync(String from, String to, String subject, String body) {
+    public CompletableFuture<Boolean> sendEmailAsync(String to, String subject, String body) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 MimeMessageHelper helper = mimeMessageHelper(javaMailSender);
-                helper.setFrom(from);
+                helper.setFrom(fromOrigin);
                 helper.setTo(to);
                 helper.setSubject(subject);
                 helper.setText(body, true);

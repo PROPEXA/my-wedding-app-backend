@@ -8,6 +8,10 @@ spring:
       refreshToken:
         # 1 week
         expiration: 604800000
+      temporaryToken:
+        secretKey: ${JWT_SECRET_TEMPORARY_KEY}
+        # 30 minutes
+        expiration: 1800000
 
   application:
     name: wedding-invitations-app
@@ -35,12 +39,13 @@ spring:
   mail:
     host: ${EMAIL_HOST}
     username: ${EMAIL_USER}
+    origin: ${EMAIL_FORM_ORIGIN}
     password: ${EMAIL_PASS}
     port: 587
     properties:
       "[mail.smtp.timeout]": 10000
       "[mail.smtp.connectiontimeout]": 10000
       "[mail.smtp.writetimeout]": 10000
-      "[mail.smtp.starttls.enable]" : true,
-      "[mail.smtp.starttls.required]" : true
+      "[mail.smtp.ssl.enable]" : true,
+      "[mail.smtp.ssl.required]" : true
 

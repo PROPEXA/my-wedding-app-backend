@@ -51,7 +51,6 @@ public class JwtService {
 
     // 2. VALIDATE TOKEN
     public boolean isTokenValid(String token) {
-
         return !isTokenExpired(token);
     }
 
