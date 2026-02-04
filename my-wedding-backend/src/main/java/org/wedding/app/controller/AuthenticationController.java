@@ -1,20 +1,21 @@
 package org.wedding.app.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wedding.app.dto.AuthenticationResponse;
 import org.wedding.app.dto.ConfirmAccount;
 import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.dto.UsernamePassword;
 import org.wedding.app.service.AuthenticationService;
+
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,14 +32,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "Actualizar token de acceso")
-    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
+    @Operation(
+            summary = "Actualizar token de acceso",
+            parameters = @Parameter(
+                    name = "X-Refresh",
+                    description = "Refresh token",
+                    required = true,
+                    in = HEADER
+            )
+    )
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestHeader("X-Refresh") String refreshToken,
+                                                               HttpServletRequest request) {
         return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 
-    @PostMapping("/confirm-account")
-    public ResponseEntity<ResponseDto> confirmAccount(@Valid @RequestBody ConfirmAccount confirmAccount){
-        return null;
-    }
+
 
 }

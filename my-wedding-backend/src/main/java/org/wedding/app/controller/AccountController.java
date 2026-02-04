@@ -1,5 +1,6 @@
 package org.wedding.app.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.wedding.app.dto.AccountDto;
+import org.wedding.app.dto.ConfirmAccount;
 import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.service.AccountService;
 
@@ -36,6 +38,19 @@ public class AccountController {
                         .phrase(HttpStatus.CREATED.getReasonPhrase())
                         .message("Cuenta creada exitosamente")
                         .url(uri.toString())
+                        .build()
+        );
+    }
+
+    @PostMapping("/confirm")
+    @Operation(summary = "Confirmar cuenta")
+    public ResponseEntity<ResponseDto> confirmAccount(@Valid @RequestBody ConfirmAccount confirmAccount) {
+        accountService.confirmAccount(confirmAccount);
+        return ResponseEntity.ok().body(
+                ResponseDto.builder()
+                        .code(HttpStatus.OK.value())
+                        .phrase(HttpStatus.OK.getReasonPhrase())
+                        .message("Cuenta confirmada exitosamente")
                         .build()
         );
     }

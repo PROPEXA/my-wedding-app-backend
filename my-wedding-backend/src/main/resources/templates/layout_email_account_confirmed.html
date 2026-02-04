@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout_email_container :: layout(~{::frg_cuenta_confirmada})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<div th:fragment="frg_cuenta_confirmada">
+
+    <h1 class="script-title">Cuenta Confirmada</h1>
+
+    <p class="body-text">
+        Hola <strong th:text="${fullName}"></strong>,<br><br>
+        Nos alegra informarte que tu cuenta ha sido confirmada exitosamente. Ahora puedes acceder a todas las
+        funcionalidades de nuestra plataforma.
+    </p>
+</div>
+</body>
+</html>

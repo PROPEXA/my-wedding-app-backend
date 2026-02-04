@@ -2,6 +2,7 @@ package org.wedding.app.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,25 +45,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         revokeAllUserTokens(tblAccount);
         saveUserToken(refreshToken, tblAccount.getId());
 
-        return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX, LocalDateTime.now());
+        return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX.trim(), LocalDateTime.now());
     }
 
     @Override
     public AuthenticationResponse refreshToken(HttpServletRequest request) {
 
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader("X-Refresh");
         final String refreshToken;
         final String email;
 
-        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX + " ")) {
+        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX)) {
             throw new ServiceException(HttpStatus.UNAUTHORIZED, "Refresh token no encontrado, proporcionalo");
         }
-        refreshToken = authHeader.substring(7);
-        email = jwtService.extractUsername(refreshToken);
 
-        if (email == null) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Refresh token invalido");
+        refreshToken = authHeader.substring(7);
+        final String tokenType = jwtService.extractTokenType(refreshToken);
+        if (!JwtService.REFRESH_TOKEN.equalsIgnoreCase(tokenType)) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Token no es de tipo refresh");
         }
+
+        email = jwtService.extractUsername(refreshToken);
 
         boolean isTokenValid = tblRefreshTokenRepository.findByTkToken(refreshToken)
                 .map(t -> t.getTkExpired().equalsIgnoreCase("N")
@@ -70,6 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElse(false);
 
         if (jwtService.isTokenValid(refreshToken) && isTokenValid) {
+            revokeAllUserTokens(tblAccountRepository.findByAccEmailIgnoreCase(email).orElseThrow());
             TblAccount tblAccount = tblAccountRepository.findByAccEmailIgnoreCase(email)
                     .orElseThrow(() -> new ServiceException(HttpStatus.UNAUTHORIZED, "No se pudo validar la identidad del usuario"));
             final String accessToken = jwtService.generateToken(tblAccount);

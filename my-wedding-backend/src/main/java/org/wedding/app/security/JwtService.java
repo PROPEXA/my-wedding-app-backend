@@ -18,6 +18,10 @@ import java.util.function.Function;
 public class JwtService {
 
     public static final String TOKEN_PREFIX = "Bearer ";
+    private static final String TOKEN_TYPE = "token_type";
+
+    public static final String ACCESS_TOKEN = "AccessToken";
+    public static final String REFRESH_TOKEN = "RefreshToken";
 
     @Value("${spring.security.jwt.secretKey}")
     private String secretKey;
@@ -30,12 +34,12 @@ public class JwtService {
 
     // 1.0 GENERATE TOKEN
     public String generateToken(TblAccount userDetails) {
-        return buildToken(null, userDetails, tokenExpiration);
+        return buildToken(Map.of(TOKEN_TYPE, ACCESS_TOKEN), userDetails, tokenExpiration);
     }
 
     // 1.1 GENERATE REFRESH TOKEN
     public String generateRefreshToken(TblAccount userDetails) {
-        return buildToken(null, userDetails, refreshTokenExpiration);
+        return buildToken(Map.of(TOKEN_TYPE, REFRESH_TOKEN), userDetails, refreshTokenExpiration);
     }
 
     private String buildToken(Map<String, Object> extraClaims,
@@ -46,17 +50,20 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration)) // 10 horas
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .addClaims(extraClaims)
                 .compact();
     }
 
-    // 2. VALIDATE TOKEN
     public boolean isTokenValid(String token) {
         return !isTokenExpired(token);
     }
 
-    // 3. EXTRACT USERNAME (CLAIMS)
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get(TOKEN_TYPE, String.class));
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

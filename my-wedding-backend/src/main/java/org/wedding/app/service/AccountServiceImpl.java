@@ -7,14 +7,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wedding.app.dto.AccountDto;
+import org.wedding.app.dto.ConfirmAccount;
 import org.wedding.app.dto.PasswordUpd;
+import org.wedding.app.event.AccountConfirmedEvent;
 import org.wedding.app.event.AccountCreatedEvent;
 import org.wedding.app.exception.ServiceException;
 import org.wedding.app.mapper.AccountMapper;
 import org.wedding.app.mapper.UserMapper;
 import org.wedding.app.model.TblAccount;
+import org.wedding.app.model.TblAccountConfirmation;
 import org.wedding.app.model.TblLanguage;
 import org.wedding.app.model.TblUser;
+import org.wedding.app.repository.TblAccountConfirmationRepository;
 import org.wedding.app.repository.TblAccountRepository;
 import org.wedding.app.repository.TblLanguageRepository;
 import org.wedding.app.repository.TblUserRepository;
@@ -24,6 +28,7 @@ import org.wedding.app.repository.TblUserRepository;
 public class AccountServiceImpl implements AccountService {
 
     private final TblAccountRepository tblAccountRepository;
+    private final TblAccountConfirmationRepository tblAccountConfirmationRepository;
     private final TblUserRepository tblUserRepository;
     private final TblLanguageRepository tblLanguageRepository;
     private final PasswordEncoder passwordEncoder;
@@ -53,17 +58,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
+    public void confirmAccount(ConfirmAccount confirmAccount) {
+        TblAccountConfirmation confirmation = tblAccountConfirmationRepository.findById(confirmAccount.token())
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "Token de confirmación inválido"));
+        if (passwordEncoder.matches(confirmAccount.code(), confirmation.getAccessCode())) {
+            confirmation.setIsConfirmed("Y");
+            confirmation.setIsExpired("Y");
+            tblAccountConfirmationRepository.saveAndFlush(confirmation);
+        } else {
+            throw new ServiceException(HttpStatus.BAD_GATEWAY, "Código de confirmación incorrecto");
+        }
+        eventPublisher.publishEvent(new AccountConfirmedEvent(this, confirmation.getAccount()));
+    }
+
+    @Override
     public void updateAccount(AccountDto accountDto) {
 
     }
 
     @Override
     public void updatePassword(PasswordUpd accountDto) {
-
-    }
-
-    @Override
-    public void confirmEmail(String token) {
 
     }
 }

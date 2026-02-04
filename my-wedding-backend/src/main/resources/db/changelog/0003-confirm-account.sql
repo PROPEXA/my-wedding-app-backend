@@ -1,7 +1,9 @@
+-- liquibase formatted sql
+
+-- changeset alexandevcwa:0003 splitStatements:false
 create table tbl_account_confirmation
 (
     id           varchar(36) primary key,
-    token        text         not null,
     access_code  varchar(100) not null,
     created_at   timestamp  default current_timestamp,
     updated_at   timestamp,
@@ -10,8 +12,6 @@ create table tbl_account_confirmation
     check ( is_expired in ('Y', 'N') ),
     account_id   integer      not null references tbl_accounts (acc_id)
 );
-
-create index idx_account_confirmation_token on tbl_account_confirmation (token);
 
 create or replace function fn_trg_account_confirmation_upd() returns trigger as
 $$
@@ -24,7 +24,7 @@ begin
 end;
 $$ language plpgsql;
 
-create trigger trg_account_confirmation_upd
+create or replace trigger trg_account_confirmation_upd
     before update
         of is_confirmed
     on tbl_account_confirmation

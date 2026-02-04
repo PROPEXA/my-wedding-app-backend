@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/0001-initial-definition-db.sql
   - include:
       file: db/changelog/0002-token-repository.sql
+  - include:
+      file: db/changelog/0003-confirm-account.sql

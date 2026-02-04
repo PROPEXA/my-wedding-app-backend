@@ -23,11 +23,11 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/accounts").permitAll()
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
-                            .access(new WebExpressionAuthorizationManager(
-                                    "hasIpAddress('127.0.0.1') or hasIpAddress('::1')"
-                            ))
+                        .requestMatchers(HttpMethod.POST, "/api/v1/accounts", "/api/v1/accounts/confirm").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
+                        .access(new WebExpressionAuthorizationManager(
+                                "hasIpAddress('127.0.0.1') or hasIpAddress('::1')"
+                        ))
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
