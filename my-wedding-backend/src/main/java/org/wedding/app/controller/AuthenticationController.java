@@ -6,12 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.wedding.app.dto.AuthenticationResponse;
-import org.wedding.app.dto.ConfirmAccount;
-import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.dto.UsernamePassword;
 import org.wedding.app.service.AuthenticationService;
 

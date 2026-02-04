@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_PREFIX = "Bearer";
     private static final String TOKEN_TYPE = "token_type";
 
     public static final String ACCESS_TOKEN = "AccessToken";

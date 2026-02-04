@@ -1,6 +1,7 @@
 package org.wedding.app.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import static org.wedding.app.controller.AccountController.ACCOUNT_CONTROLLER_BA
 @RestController
 @RequestMapping(ACCOUNT_CONTROLLER_BASE_URL)
 @RequiredArgsConstructor
+@Tag(name = "Cuentas", description = "Operaciones relacionadas con las cuentas")
 public class AccountController {
 
     public static final String ACCOUNT_CONTROLLER_BASE_URL = "/api/v1/accounts";
@@ -28,7 +30,8 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createNewAccount(@RequestBody
+    @Operation(summary = "Crear cuenta")
+    public ResponseEntity<ResponseDto<Object>> createNewAccount(@RequestBody
                                                         @Valid AccountDto accountDto) {
         Integer userId = accountService.saveAccount(accountDto);
         URI uri = URI.create(ACCOUNT_CONTROLLER_BASE_URL + "/" + userId);
@@ -44,7 +47,7 @@ public class AccountController {
 
     @PostMapping("/confirm")
     @Operation(summary = "Confirmar cuenta")
-    public ResponseEntity<ResponseDto> confirmAccount(@Valid @RequestBody ConfirmAccount confirmAccount) {
+    public ResponseEntity<ResponseDto<Object>> confirmAccount(@Valid @RequestBody ConfirmAccount confirmAccount) {
         accountService.confirmAccount(confirmAccount);
         return ResponseEntity.ok().body(
                 ResponseDto.builder()

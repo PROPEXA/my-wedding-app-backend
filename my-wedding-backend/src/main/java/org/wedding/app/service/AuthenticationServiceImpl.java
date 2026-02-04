@@ -2,7 +2,7 @@ package org.wedding.app.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -39,46 +40,51 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 new UsernamePasswordAuthenticationToken(usernamePassword.username(), usernamePassword.password())
         );
         TblAccount tblAccount = auth.getPrincipal() instanceof TblAccount ? (TblAccount) auth.getPrincipal() : null;
+        if (tblAccount == null) throw new ServiceException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         final String accessToken = jwtService.generateToken(tblAccount);
         final String refreshToken = jwtService.generateRefreshToken(tblAccount);
 
         revokeAllUserTokens(tblAccount);
-        saveUserToken(refreshToken, tblAccount.getId());
-
-        return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX.trim(), LocalDateTime.now());
+        saveSessionToken(refreshToken, tblAccount.getId());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            log.warn("Exception sleeping thread: Interrupción de espera de thread");
+        }
+        return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX, LocalDateTime.now());
     }
 
     @Override
     public AuthenticationResponse refreshToken(HttpServletRequest request) {
 
         final String authHeader = request.getHeader("X-Refresh");
-        final String refreshToken;
-        final String email;
 
-        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith(JwtService.TOKEN_PREFIX + " ")) {
             throw new ServiceException(HttpStatus.UNAUTHORIZED, "Refresh token no encontrado, proporcionalo");
         }
 
-        refreshToken = authHeader.substring(7);
+        String refreshToken = authHeader.substring(7);
         final String tokenType = jwtService.extractTokenType(refreshToken);
         if (!JwtService.REFRESH_TOKEN.equalsIgnoreCase(tokenType)) {
             throw new ServiceException(HttpStatus.UNAUTHORIZED, "Token no es de tipo refresh");
         }
 
-        email = jwtService.extractUsername(refreshToken);
-
-        boolean isTokenValid = tblRefreshTokenRepository.findByTkToken(refreshToken)
-                .map(t -> t.getTkExpired().equalsIgnoreCase("N")
-                        && t.getTkRevoked().equalsIgnoreCase("N"))
-                .orElse(false);
+        TblRefreshToken tblRefreshToken = tblRefreshTokenRepository.findByTkToken(refreshToken)
+                .orElseThrow(() -> new ServiceException(HttpStatus.UNAUTHORIZED, "Sesión expirada, vuelve a identificarte"));
+        boolean isTokenValid = tblRefreshToken.getTkExpired().equalsIgnoreCase("N") && tblRefreshToken.getTkRevoked().equalsIgnoreCase("N");
 
         if (jwtService.isTokenValid(refreshToken) && isTokenValid) {
-            revokeAllUserTokens(tblAccountRepository.findByAccEmailIgnoreCase(email).orElseThrow());
+            String email = jwtService.extractUsername(refreshToken);
             TblAccount tblAccount = tblAccountRepository.findByAccEmailIgnoreCase(email)
                     .orElseThrow(() -> new ServiceException(HttpStatus.UNAUTHORIZED, "No se pudo validar la identidad del usuario"));
             final String accessToken = jwtService.generateToken(tblAccount);
             return new AuthenticationResponse(accessToken, refreshToken, JwtService.TOKEN_PREFIX, LocalDateTime.now());
         } else {
+            if (isTokenValid) {
+                tblRefreshToken.setTkRevoked("Y");
+                tblRefreshToken.setTkExpired("Y");
+                tblRefreshTokenRepository.save(tblRefreshToken);
+            }
             throw new ServiceException(HttpStatus.UNAUTHORIZED, "Sesión expirada, vuelve a identificarte");
         }
     }
@@ -94,12 +100,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         tblRefreshTokenRepository.saveAll(refreshTokens);
     }
 
-    private void saveUserToken(String token, Integer accountId) {
-        TblRefreshToken refresh = TblRefreshToken.builder()
+    private void saveSessionToken(String token, Integer accountId) {
+        tblRefreshTokenRepository.save(TblRefreshToken.builder()
                 .tkId(UUID.randomUUID().toString())
                 .tkToken(token)
                 .tkType(JwtService.TOKEN_PREFIX)
+                .tkRevoked("N")
+                .tkExpired("N")
                 .tkAccount(accountId)
-                .build();
+                .build()
+        );
     }
 }

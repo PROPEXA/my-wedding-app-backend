@@ -27,7 +27,7 @@ public class AccountEventListener {
     private final TblAccountConfirmationRepository tblAccountConfirmationRepository;
     private final RandomStringGenerator randomStringGenerator = new RandomStringGenerator.Builder()
             .withinRange('0', 'Z').filteredBy(Character::isLetterOrDigit)
-            .build();
+            .get();
 
     @Async
     @EventListener
