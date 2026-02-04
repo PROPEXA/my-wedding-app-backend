@@ -1,5 +1,7 @@
 spring:
   security:
+    cors:
+      origin: ${CORS_ALLOWED_ORIGINS}
     jwt:
       secretKey: ${JWT_SECRET_KEY}
       token:
