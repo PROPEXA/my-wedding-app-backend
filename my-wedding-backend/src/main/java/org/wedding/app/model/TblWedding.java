@@ -3,17 +3,23 @@ package org.wedding.app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "tbl_weddings")
 public class TblWedding {
     @Id
@@ -22,7 +28,7 @@ public class TblWedding {
     @Column(name = "wed_id", nullable = false)
     private Integer id;
 
-    @NotNull
+    @CreatedBy
     @Column(name = "wed_account", nullable = false)
     private Integer wedAccount;
 
@@ -68,10 +74,12 @@ public class TblWedding {
     @Column(name = "wed_groom_tel", length = 20)
     private String wedGroomTel;
 
+    @CreatedDate
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "wed_register")
     private LocalDateTime wedRegister;
 
+    @LastModifiedDate
     @Column(name = "wed_updated")
     private LocalDateTime wedUpdated;
 
@@ -79,6 +87,4 @@ public class TblWedding {
     @ColumnDefault("'A'")
     @Column(name = "wed_status", length = 1)
     private String wedStatus;
-
-
 }
