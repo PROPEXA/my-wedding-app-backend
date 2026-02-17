@@ -6,12 +6,15 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.Instant;
 
+/**
+ * Representa la entidad de cuenta que se almacena en la tabla "tbl_accounts".
+ * Esta clase está diseñada para ser utilizada con JPA (Java Persistence API) y contiene información
+ * relacionada con la gestión de cuentas de usuario, incluyendo email, estado, registro y actualización.
+ */
 @Getter
 @Setter
 @Entity

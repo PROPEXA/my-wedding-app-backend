@@ -13,6 +13,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Representa la entidad de boda en la base de datos que se almacena en la tabla "tbl_weddings".
+ * Esta clase está diseñada para ser utilizada con JPA (Java Persistence API) y proporciona información
+ * sobre las ceremonias de boda, incluyendo datos de los novios y detalles de auditoría.
+ */
 @Getter
 @Setter
 @Entity

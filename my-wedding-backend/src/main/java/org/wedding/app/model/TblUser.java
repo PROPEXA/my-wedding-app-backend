@@ -6,13 +6,17 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.time.LocalDate;
 
+/**
+ * Representa la entidad de usuario en la base de datos que se almacena en la tabla "tbl_users".
+ * Esta clase está diseñada para ser utilizada con JPA (Java Persistence API) y contiene información básica
+ * de los usuarios como nombre, apellido, fecha de nacimiento, y detalles de auditoría.
+ */
 @Getter
 @Setter
 @Entity

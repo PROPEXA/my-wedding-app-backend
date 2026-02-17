@@ -7,7 +7,15 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
+/**
+ * Representa la entidad que define los tipos de eventos en la base de datos,
+ * almacenada en la tabla "tbl_events_type".
+ * Esta clase está diseñada para ser utilizada con JPA (Java Persistence API)
+ * y contiene información del tipo de evento, incluyendo su nombre,
+ * fecha de registro y fecha de última modificación.
+ */
 @Getter
 @Setter
 @Entity
@@ -25,10 +33,10 @@ public class TblEventType {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "evt_register")
-    private Instant evtRegister;
+    private LocalDateTime evtRegister;
 
     @Column(name = "evt_modified")
-    private Instant evtModified;
+    private LocalDateTime evtModified;
 
 
 }
