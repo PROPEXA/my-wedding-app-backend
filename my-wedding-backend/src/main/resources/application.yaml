@@ -48,6 +48,6 @@ spring:
       "[mail.smtp.timeout]": 10000
       "[mail.smtp.connectiontimeout]": 10000
       "[mail.smtp.writetimeout]": 10000
-      "[mail.smtp.ssl.enable]" : true,
-      "[mail.smtp.ssl.required]" : true
+      "[mail.smtp.ssl.enable]": true,
+      "[mail.smtp.ssl.required]": true
 

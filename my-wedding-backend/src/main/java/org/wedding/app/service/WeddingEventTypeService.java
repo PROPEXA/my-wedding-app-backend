@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface WeddingEventTypeService {
 
-    List<EventTypeDto> obtainEventList();
+    List<EventTypeDto> obtainEventTypeList();
 
-    EventTypeDto obtainEventById(int id);
+    EventTypeDto obtainEventTypeById(int id);
 
 }

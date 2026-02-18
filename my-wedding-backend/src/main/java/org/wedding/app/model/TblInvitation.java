@@ -6,10 +6,20 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.wedding.app.dto.InvitationGuestDto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,12 +51,24 @@ public class TblInvitation {
     @Column(name = "inv_maxconf", nullable = false)
     private OffsetDateTime invMaxconf;
 
+    @CreatedDate
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "inv_register")
-    private Instant invRegister;
+    private LocalDateTime invRegister;
 
+    @LastModifiedDate
     @Column(name = "inv_modified")
-    private Instant invModified;
+    private LocalDateTime invModified;
 
+    @CreatedBy
+    @Column(name = "inv_created_by")
+    private Integer invCreatedBy;
 
+    @LastModifiedBy
+    @Column(name = "inv_modified_by")
+    private Integer invModifiedBy;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "inv_guest_list")
+    private List<InvitationGuestDto> guests;
 }

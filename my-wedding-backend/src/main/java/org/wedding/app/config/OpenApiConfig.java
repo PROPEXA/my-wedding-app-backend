@@ -23,7 +23,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("My Wedding App API")
                         .description("API documentation for My Wedding App")
-                        .version(env.getProperty("application.version"))
+                        .version(env.getProperty("spring.application.version"))
                 )
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME, new SecurityScheme()

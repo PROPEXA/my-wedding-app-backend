@@ -26,13 +26,13 @@ public class WeddingEventTypeController {
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get all wedding events types")
     public ResponseEntity<List<EventTypeDto>> getAllWeddingEventsTypes() {
-        return ResponseEntity.ok(weddingEventTypeService.obtainEventList());
+        return ResponseEntity.ok(weddingEventTypeService.obtainEventTypeList());
     }
 
     @GetMapping("/{id}")
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get wedding event type by id")
     public ResponseEntity<EventTypeDto> getWeddingEventTypeById(@PathVariable Integer id) {
-        return ResponseEntity.ok(weddingEventTypeService.obtainEventById(id));
+        return ResponseEntity.ok(weddingEventTypeService.obtainEventTypeById(id));
     }
 }
