@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
-import { authInterceptor, camelCaseInterceptor, snakeCaseInterceptor } from './core/interceptor';
+import { authInterceptor } from './core/interceptor/auth.interceptor';
 
 /**
  * Configuración principal de la aplicación Angular.
