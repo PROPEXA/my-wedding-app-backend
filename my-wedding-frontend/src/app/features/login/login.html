@@ -1,0 +1,63 @@
+<!-- CARD LOGIN -->
+<div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
+  <!-- HEADER CON TEMA BODA -->
+  <div class="bg-linear-to-r from-rose-400 to-pink-500 p-8 text-center">
+    <h1 class="text-4xl font-bold text-white mb-2">My Wedding App</h1>
+    <p class="text-rose-100 text-sm">Planifica tu día especial juntos</p>
+  </div>
+  <!-- FORMULARIO LOGIN -->
+  <div class="p-8">
+    <form class="space-y-4">
+      <div
+        class="appInput"
+        type="email"
+        placeholder="pareja@example.com"
+        (text)="username()"
+        label="Correo Electrónico"
+      ></div>
+      <div
+        class="appInput"
+        type="password"
+        placeholder="••••••••"
+        (text)="password()"
+        label="Contraseña"
+      ></div>
+
+      <!-- REMEMBER Y FORGOT -->
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center text-gray-600 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 text-rose-500 rounded" />
+          <span class="ml-2">Recuerda mis datos</span>
+        </label>
+        <a href="#" class="text-rose-500 hover:text-rose-700 font-medium">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <!-- BOTÓN LOGIN -->
+      <app-button type="submit" [onClickHandlers]="[onSubmitLogin]" theme="primary">
+        Comenzar Juntos
+      </app-button>
+    </form>
+
+    <!-- DIVIDER -->
+    <div class="flex items-center my-6">
+      <div class="flex-1 border-t-2 border-rose-200"></div>
+      <span class="px-3 text-gray-400 text-sm">O</span>
+      <div class="flex-1 border-t-2 border-rose-200"></div>
+    </div>
+
+    <!-- SIGN UP -->
+    <p class="text-center text-gray-600">
+      ¿Aún no tienes cuenta?
+      <a routerLink="../sigup" class="text-rose-500 font-bold hover:text-rose-700">
+        Regístrate aquí
+      </a>
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="bg-gray-50 px-8 py-4 text-center text-xs text-gray-500">
+    <p>🎊 Tu boda, perfectamente organizada 🎊</p>
+  </div>
+</div>
