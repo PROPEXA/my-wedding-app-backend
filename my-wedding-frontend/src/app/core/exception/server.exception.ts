@@ -1,17 +1,26 @@
-import { URL } from '../env/env.dev';
+import { API } from '../env/env.dev';
 import { ResponseServer } from '../model/response.mode';
 import { logger } from '../utils/log.util';
 
 export class ServerException extends Error {
-  constructor(
-    responseServer: ResponseServer,
-    public code = responseServer.code,
-    public phrase = responseServer.phrase,
-    public content = responseServer.content,
-  ) {
-    super(responseServer.message);
+  code?: number;
+  phrase?: string;
+  content?: any;
+
+  constructor(error: any) {
+    super(error.error.message);
     this.name = 'ServerResponseError';
-    if (URL.showLog) {
+    let message = error.error.message;
+    if (message == null) {
+      this.code = 500;
+      this.phrase = 'Internal Server Error';
+      this.message = 'Error desconocido, conecte con soporte.';
+    } else {
+      this.code = error.error.code;
+      this.phrase = error.error.phrase;
+      this.content = error.error.content;
+    }
+    if (API.showLog) {
       logger.error(`[${this.code}/${this.phrase}] :: ${this.message}`);
     }
   }

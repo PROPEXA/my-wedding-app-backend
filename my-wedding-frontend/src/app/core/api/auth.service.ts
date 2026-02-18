@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from '../model/auth.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Authenticated } from '../model/authenticated.mode';
-import { URL } from '../env/env.dev';
+import { API } from '../env/env.dev';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ResponseServer } from '../model/response.mode';
 import { ServerException } from '../exception/server.exception';
@@ -18,14 +18,45 @@ export class AuthService {
   private sessionDateTime = 'session_datetime';
   private tokenType = 'token_type';
 
-  authenticate(auth: Auth): Observable<Date | ResponseServer> {
-    return this.http.post<Authenticated>(`${URL.baseUrl}/api/v1/login`, auth).pipe(
+  authenticate(auth: Auth): Observable<Date> {
+    return this.http.post<Authenticated>(`${API.baseUrl}/api/v1/login`, auth).pipe(
       tap((authenticated) => this.saveTokens(authenticated)),
       map((authenticated) => {
         return authenticated.date_time;
       }),
-      catchError(this.handleError),
+      catchError((error) => throwError(() => new ServerException(error))),
     );
+  }
+
+  refreshAuthentication(): Observable<Authenticated> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      this.logout();
+      return throwError(() => new Error('No refresh token available'));
+    }
+
+    return this.http
+      .post<Authenticated>(`${API.baseUrl}/api/v1/auth/refresh`, { refreshToken })
+      .pipe(
+        tap((tokens) => this.saveTokens(tokens)),
+        catchError((error) => {
+          this.logout();
+          return throwError(() => new ServerException(error));
+        }),
+      );
+  }
+
+  logout(): void {
+    this.clearTokens();
+    this.router.navigate(['/login']);
+  }
+
+  getAccessToken(): string | null {
+    return localStorage.getItem(this.accessToken);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.refreshToken);
   }
 
   private saveTokens(authenticated: Authenticated) {
@@ -35,24 +66,10 @@ export class AuthService {
     sessionStorage.setItem(this.tokenType, authenticated.token_type);
   }
 
-  private handleError(error: HttpErrorResponse): Observable<ResponseServer> {
-    let errorCode = error.error.code;
-    let errorPhrase = error.error.phrase;
-    let errorMessage = error.error.message;
-    let errorContent = error.error.content;
-
-    if (errorMessage == null) {
-      errorCode = 500;
-      errorMessage = 'Error desconocido, contacta con soporte para investigación';
-    }
-
-    const errorServer: ResponseServer = {
-      code: errorCode,
-      phrase: errorPhrase,
-      message: errorMessage,
-      content: errorContent,
-    };
-
-    return throwError(() => new ServerException(errorServer));
+  private clearTokens() {
+    sessionStorage.removeItem(this.accessToken);
+    sessionStorage.removeItem(this.refreshToken);
+    sessionStorage.removeItem(this.sessionDateTime);
+    sessionStorage.removeItem(this.tokenType);
   }
 }
