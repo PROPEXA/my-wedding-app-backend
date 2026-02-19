@@ -1,5 +1,5 @@
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable } from '@angular/core';
-import { Alert, AlertConfig, AlertResult, AlertType } from './alert';
+import { Alert, AlertConfig, AlertResult } from './alert';
 
 /**
  * Servicio para mostrar alertas de forma programática
