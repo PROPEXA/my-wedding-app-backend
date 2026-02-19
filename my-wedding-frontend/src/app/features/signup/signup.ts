@@ -1,17 +1,25 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
-
 import { Button } from '../../components/button/button';
 import { Input } from '../../components/input/input';
 import { Dropdown, type DropdownOption } from '../../components/dropdown/dropdown';
 import { Datepicker } from '../../components/datepicker/datepicker';
-import { AuthService } from '../../core/api/auth.service';
 import { AlertService } from '../../components/alert/alert.service';
-import { FormHeader } from "../../components/form-header/form-header";
-import { FormContainer } from "../../components/form-container/form-container";
+import { FormHeader } from '../../components/form-header/form-header';
+import { FormContainer } from '../../components/form-container/form-container';
+import { LanguageService } from '../../core/api/language.service';
+import { AccountService } from '../../core/api/account.service';
+import { logger } from '../../core/utils/log.util';
+import { Account } from '../../core/model/account.mode';
 
 /**
  * Validador personalizado para verificar que las contraseñas coincidan
@@ -42,13 +50,23 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-signup',
-  imports: [Button, Input, Dropdown, Datepicker, RouterLink, ReactiveFormsModule, FormHeader, FormContainer],
+  imports: [
+    Button,
+    Input,
+    Dropdown,
+    Datepicker,
+    RouterLink,
+    ReactiveFormsModule,
+    FormHeader,
+    FormContainer,
+  ],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
-  private authService = inject(AuthService);
+export class Signup implements OnInit {
   private destroyRef = inject(DestroyRef);
+  private languageService = inject(LanguageService);
+  private accountService = inject(AccountService);
   private router = inject(Router);
   private alertService = inject(AlertService);
 
@@ -59,55 +77,65 @@ export class Signup {
   serverError = signal<string | null>(null);
 
   /** Opciones para el dropdown de idioma */
-  languageOptions: DropdownOption[] = [
-    { value: 'es', label: 'Español' },
-    { value: 'en', label: 'English' },
-    { value: 'pt', label: 'Português' },
-    { value: 'fr', label: 'Français' },
-    { value: 'it', label: 'Italiano' },
-  ];
+  languageOptions = signal<DropdownOption[]>([]);
 
   /** Fecha máxima para nacimiento (18 años de antigüedad) */
   maxBirthDate = this.calculateMaxBirthDate();
 
   /** Formulario de registro con validaciones */
-  form = new FormGroup({
-    // Datos de cuenta
-    language: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(8)],
-    }),
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    // Datos del usuario
-    birthDate: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    firstName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-    lastName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-    // Términos
-    acceptTerms: new FormControl(false, {
-      nonNullable: true,
-      validators: [Validators.requiredTrue],
-    }),
-  }, { validators: passwordMatchValidator() });
+  form = new FormGroup(
+    {
+      // Datos de cuenta
+      language: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8)],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      // Datos del usuario
+      birthDate: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      firstName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(2)],
+      }),
+      lastName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(2)],
+      }),
+      // Términos
+      acceptTerms: new FormControl(false, {
+        nonNullable: true,
+        validators: [Validators.requiredTrue],
+      }),
+    },
+    { validators: passwordMatchValidator() },
+  );
+
+  ngOnInit(): void {
+    const languageSub = this.languageService.getLanguages().subscribe({
+      next: (languages) => {
+        const options = languages.map((lang) => ({
+          value: lang.iso6391,
+          label: lang.native_name,
+        }));
+        this.languageOptions.set(options);
+      },
+    });
+    this.destroyRef.onDestroy(() => languageSub.unsubscribe());
+  }
 
   /**
    * Calcula la fecha máxima de nacimiento (18 años atrás)
@@ -199,38 +227,37 @@ export class Signup {
     }
 
     this.isLoading.set(true);
+    const accountMapped = this.mapFormDataToAccount();
+    logger.info('Datos mapeados para registro: ' + JSON.stringify(accountMapped));
 
-    const formData = this.form.getRawValue();
-
-    // TODO: Implementar llamada al servicio de registro
-    // Por ahora simulamos el registro
-    console.log('Datos de registro:', formData);
-
-    // Simulación de registro exitoso después de 2 segundos
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.alertService.success('¡Registro exitoso!', 'Tu cuenta ha sido creada correctamente.').then(() => {
-        // Redirigir al login después de cerrar la alerta
-        this.router.navigate(['/app/login']);
-      });
-    }, 2000);
-
-    /*
-    // Implementación real con AuthService
-    this.authService
-      .register(formData)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.isLoading.set(false)),
-      )
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/auth/login']);
-        },
-        error: (error) => {
-          this.serverError.set(error.message || 'Error al crear la cuenta. Inténtalo de nuevo.');
-        },
-      });
-    */
+    const subs = this.accountService.postNewAccount(accountMapped).subscribe({
+      next: (response) => {
+        logger.success('Cuenta creada exitosamente: ' + JSON.stringify(response));
+        this.isLoading.set(false);
+        this.alertService.success('¡Registro exitoso!', response.message).then(() => {
+          // Redirigir al login después de cerrar la alerta
+          this.router.navigate(['/app/login']);
+        });
+      },
+      error: (error) => {
+        logger.error('Error al crear la cuenta: ' + error);
+        this.isLoading.set(false);
+        this.alertService.error('Error al crear la cuenta', error.message || 'Inténtalo de nuevo.');
+      },
+    });
+    this.destroyRef.onDestroy(() => subs.unsubscribe());
   };
+
+  private mapFormDataToAccount(): Account {
+    return {
+      account_language_id: this.form.controls.language.value,
+      email: this.form.controls.email.value,
+      password: this.form.controls.password.value,
+      user: {
+        birthdate: new Date(this.form.controls.birthDate.value),
+        first_name: this.form.controls.firstName.value,
+        last_name: this.form.controls.lastName.value,
+      },
+    };
+  }
 }

@@ -1,5 +1,3 @@
-import { API } from '../env/env.dev';
-import { ResponseServer } from '../model/response.mode';
 import { logger } from '../utils/log.util';
 
 export class ServerException extends Error {
@@ -20,8 +18,6 @@ export class ServerException extends Error {
       this.phrase = error.error.phrase;
       this.content = error.error.content;
     }
-    if (API.showLog) {
-      logger.error(`[${this.code}/${this.phrase}] :: ${this.message}`);
-    }
+    logger.error(`[${this.code}/${this.phrase}] :: ${this.message}`);
   }
 }

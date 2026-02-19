@@ -1,0 +1,193 @@
+<!-- CARD CONFIRM ACCOUNT -->
+<app-form-container>
+  <!-- HEADER CON TEMA BODA -->
+  <app-form-header title="My Wedding App" subtitle="Verifica tu cuenta" />
+
+  <!-- CONTENIDO -->
+  <div class="p-5 sm:p-8">
+    <!-- ESTADO DE ÉXITO -->
+    @if (isSuccess()) {
+      <div class="text-center space-y-6">
+        <!-- Icono de éxito -->
+        <div class="flex justify-center">
+          <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+            <svg
+              class="w-10 h-10 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800">¡Cuenta Verificada!</h2>
+          <p class="text-gray-600 text-sm sm:text-base">
+            Tu cuenta ha sido verificada exitosamente. Ya puedes iniciar sesión.
+          </p>
+        </div>
+
+        <app-button type="button" theme="primary" routerLink="/app/login">
+          Iniciar Sesión
+        </app-button>
+      </div>
+    } @else {
+      <!-- FORMULARIO DE VERIFICACIÓN -->
+      <div class="space-y-6">
+        <!-- Información -->
+        <div class="text-center space-y-2">
+          <div class="flex justify-center mb-4">
+            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center">
+              <svg
+                class="w-8 h-8 text-rose-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <h2 class="text-lg sm:text-xl font-semibold text-gray-800">
+            Ingresa el código de verificación
+          </h2>
+          <p class="text-gray-500 text-xs sm:text-sm">
+            Hemos enviado un código de {{ config().codeLength }} caracteres a tu correo electrónico
+          </p>
+        </div>
+
+        <!-- ERROR DEL SERVIDOR -->
+        @if (serverError()) {
+          <app-toast [message]="serverError()" type="error" />
+        }
+
+        <!-- INPUTS DEL CÓDIGO -->
+        <div class="flex justify-center gap-2 sm:gap-3">
+          @for (i of codeIndexes(); track i) {
+            <input
+              [id]="'code-' + i"
+              type="text"
+              maxlength="1"
+              autocomplete="off"
+              inputmode="text"
+              [value]="codeDigits()[i]"
+              (input)="onCodeInput($event, i)"
+              (keydown)="onCodeKeyDown($event, i)"
+              (paste)="onCodePaste($event, i)"
+              class="code-input w-12 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-300 uppercase"
+              [class.border-rose-300]="!serverError()"
+              [class.border-rose-500]="codeDigits()[i]"
+              [class.bg-rose-50]="codeDigits()[i]"
+              [class.border-red-400]="serverError()"
+              [class.bg-red-50]="serverError()"
+              [disabled]="isLoading()"
+            />
+          }
+        </div>
+
+        <!-- BOTONES -->
+        <div class="space-y-3">
+          <!-- Botón Verificar -->
+          <app-button
+            type="button"
+            [onClickHandlers]="[onSubmitCode]"
+            theme="primary"
+            [disabled]="isLoading() || !isCodeComplete()"
+          >
+            @if (isLoading()) {
+              <span class="flex items-center justify-center gap-2">
+                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="none"
+                  />
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Verificando...
+              </span>
+            } @else {
+              Verificar Código
+            }
+          </app-button>
+
+          <!-- Botón Limpiar -->
+          @if (fullCode()) {
+            <button
+              type="button"
+              (click)="clearCode()"
+              [disabled]="isLoading()"
+              class="w-full text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors py-2"
+            >
+              Limpiar código
+            </button>
+          }
+        </div>
+
+        <!-- REENVIAR CÓDIGO -->
+        <!-- <div class="text-center pt-2">
+          <p class="text-gray-500 text-xs sm:text-sm">¿No recibiste el código?</p>
+          <button
+            type="button"
+            (click)="onResendCode()"
+            [disabled]="isLoading()"
+            class="text-rose-500 hover:text-rose-700 font-medium transition-colors text-sm mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Reenviar código
+          </button>
+        </div> -->
+
+        <!-- DIVIDER DECORATIVO -->
+        <div class="relative py-2">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-rose-100"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-4 text-rose-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- VOLVER A LOGIN -->
+        <div class="text-center">
+          <p class="text-gray-600 text-sm">
+            ¿Ya verificaste tu cuenta?
+            <a
+              routerLink="/app/login"
+              class="text-rose-500 hover:text-rose-700 font-semibold transition-colors ml-1"
+            >
+              Iniciar Sesión
+            </a>
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+</app-form-container>

@@ -17,6 +17,10 @@ export const routes: Routes = [
         path: 'signup',
         loadComponent: () => import('./features/signup/signup').then((m) => m.Signup),
       },
+      {
+        path: 'confirm/:token',
+        loadComponent: () => import('./features/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
+      },
     ],
   },
 ];

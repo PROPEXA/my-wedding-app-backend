@@ -4,8 +4,7 @@ import { Auth } from '../model/auth.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Authenticated } from '../model/authenticated.mode';
 import { API } from '../env/env.dev';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ResponseServer } from '../model/response.mode';
+import { HttpClient } from '@angular/common/http';
 import { ServerException } from '../exception/server.exception';
 
 @Injectable({ providedIn: 'root' })
@@ -48,7 +47,7 @@ export class AuthService {
 
   logout(): void {
     this.clearTokens();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/app/login']);
   }
 
   getAccessToken(): string | null {
