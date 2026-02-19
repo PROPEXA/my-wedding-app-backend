@@ -62,17 +62,18 @@ public class AccountServiceImpl implements AccountService {
     public void confirmAccount(ConfirmAccount confirmAccount) {
         TblAccountConfirmation confirmation = tblAccountConfirmationRepository.findById(confirmAccount.token())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "Token de confirmación inválido"));
-        if (confirmation.getIsConfirmed().equalsIgnoreCase("Y"))
-            throw new ServiceException(HttpStatus.BAD_REQUEST, "Cuenta ya confirmada");
+        final String isConfirmed = confirmation.getIsConfirmed();
+        if (isConfirmed != null && isConfirmed.equalsIgnoreCase("Y"))
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "Cuenta ya fue confirmada");
         if (passwordEncoder.matches(confirmAccount.code(), confirmation.getAccessCode())) {
             confirmation.setIsConfirmed("Y");
             confirmation.setIsExpired("Y");
-            tblAccountConfirmationRepository.saveAndFlush(confirmation);
+            TblAccountConfirmation modified = tblAccountConfirmationRepository.save(confirmation);
+            final TblAccount account = modified.getAccount();
+            eventPublisher.publishEvent(new AccountConfirmedEvent(this, account));
         } else {
             throw new ServiceException(HttpStatus.BAD_REQUEST, "Código de confirmación incorrecto");
         }
-        final TblAccount account = confirmation.getAccount();
-        eventPublisher.publishEvent(new AccountConfirmedEvent(this, account));
     }
 
     @Override

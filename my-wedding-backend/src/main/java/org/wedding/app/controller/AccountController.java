@@ -39,7 +39,7 @@ public class AccountController {
                 ResponseDto.builder()
                         .code(HttpStatus.CREATED.value())
                         .phrase(HttpStatus.CREATED.getReasonPhrase())
-                        .message("Cuenta creada exitosamente")
+                        .message("Cuenta creada exitosamente, por favor revise su correo para confirmar su cuenta")
                         .url(uri.toString())
                         .build()
         );
