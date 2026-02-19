@@ -51,74 +51,194 @@
       class="absolute z-50 mt-2 bg-white rounded-lg shadow-xl border-2 border-rose-100 p-3 sm:p-4 w-full sm:w-80 left-0 sm:left-auto"
       (clickOutside)="closeCalendar()"
     >
-      <!-- Header del calendario -->
-      <div class="flex items-center justify-between mb-3 sm:mb-4">
-        <button
-          type="button"
-          (click)="previousMonth()"
-          class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <span class="font-semibold text-gray-800 text-sm sm:text-base">
-          {{ currentMonthName() }} {{ currentYear() }}
-        </span>
-
-        <button
-          type="button"
-          (click)="nextMonth()"
-          class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Días de la semana -->
-      <div class="grid grid-cols-7 gap-0.5 sm:gap-1 mb-1 sm:mb-2">
-        @for (day of weekDays; track day) {
-          <div class="text-center text-xs font-medium text-gray-500 py-1 sm:py-2">
-            {{ day }}
-          </div>
-        }
-      </div>
-
-      <!-- Días del mes -->
-      <div class="grid grid-cols-7 gap-0.5 sm:gap-1">
-        @for (day of calendarDays(); track day.date) {
+      <!-- ========== VISTA DE AÑOS ========== -->
+      @if (currentView() === 'years') {
+        <!-- Header de años -->
+        <div class="flex items-center justify-between mb-3 sm:mb-4">
           <button
             type="button"
-            (click)="selectDate(day.date)"
-            [disabled]="day.isDisabled"
-            [class]="'w-8 h-8 sm:w-9 sm:h-9 text-xs sm:text-sm rounded-lg transition-all duration-200 ' +
-              (day.isSelected
-                ? 'bg-rose-500 text-white font-bold shadow-md'
-                : day.isToday
-                  ? 'bg-rose-100 text-rose-600 font-semibold'
-                  : day.isCurrentMonth
-                    ? 'text-gray-700 hover:bg-rose-50 hover:text-rose-500'
-                    : 'text-gray-300') +
-              (day.isDisabled ? ' opacity-40 cursor-not-allowed' : ' cursor-pointer')"
+            (click)="previousDecade()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
           >
-            {{ day.day }}
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
-        }
-      </div>
 
-      <!-- Botón de hoy -->
-      <div class="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-rose-100">
-        <button
-          type="button"
-          (click)="selectDate(formatTodayDate())"
-          class="w-full py-1.5 sm:py-2 text-xs sm:text-sm text-rose-500 hover:text-rose-700 font-medium transition-colors"
-        >
-          Hoy
-        </button>
-      </div>
+          <span class="font-semibold text-gray-800 text-sm sm:text-base">
+            {{ currentDecade() }} - {{ currentDecade() + 19 }}
+          </span>
+
+          <button
+            type="button"
+            (click)="nextDecade()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Grid de años -->
+        <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
+          @for (yearItem of yearsInDecade(); track yearItem.year) {
+            <button
+              type="button"
+              (click)="selectYear(yearItem.year)"
+              [disabled]="yearItem.isDisabled"
+              [class]="'py-2 sm:py-2.5 text-xs sm:text-sm rounded-lg transition-all duration-200 ' +
+                (yearItem.isSelected
+                  ? 'bg-rose-500 text-white font-bold shadow-md'
+                  : yearItem.isCurrentYear
+                    ? 'bg-rose-100 text-rose-600 font-semibold'
+                    : 'text-gray-700 hover:bg-rose-50 hover:text-rose-500') +
+                (yearItem.isDisabled ? ' opacity-40 cursor-not-allowed' : ' cursor-pointer')"
+            >
+              {{ yearItem.year }}
+            </button>
+          }
+        </div>
+      }
+
+      <!-- ========== VISTA DE MESES ========== -->
+      @if (currentView() === 'months') {
+        <!-- Header de meses -->
+        <div class="flex items-center justify-between mb-3 sm:mb-4">
+          <button
+            type="button"
+            (click)="previousYear()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            (click)="showYearsView()"
+            class="font-semibold text-gray-800 text-sm sm:text-base hover:text-rose-500 transition-colors"
+          >
+            {{ currentYear() }}
+          </button>
+
+          <button
+            type="button"
+            (click)="nextYear()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Grid de meses -->
+        <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+          @for (monthItem of monthsGrid(); track monthItem.month) {
+            <button
+              type="button"
+              (click)="selectMonth(monthItem.month)"
+              [disabled]="monthItem.isDisabled"
+              [class]="'py-2.5 sm:py-3 text-xs sm:text-sm rounded-lg transition-all duration-200 ' +
+                (monthItem.isSelected
+                  ? 'bg-rose-500 text-white font-bold shadow-md'
+                  : monthItem.isCurrentMonth
+                    ? 'bg-rose-100 text-rose-600 font-semibold'
+                    : 'text-gray-700 hover:bg-rose-50 hover:text-rose-500') +
+                (monthItem.isDisabled ? ' opacity-40 cursor-not-allowed' : ' cursor-pointer')"
+            >
+              {{ monthItem.name }}
+            </button>
+          }
+        </div>
+      }
+
+      <!-- ========== VISTA DE DÍAS ========== -->
+      @if (currentView() === 'days') {
+        <!-- Header del calendario -->
+        <div class="flex items-center justify-between mb-3 sm:mb-4">
+          <button
+            type="button"
+            (click)="previousMonth()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <div class="flex gap-1">
+            <button
+              type="button"
+              (click)="showMonthsView()"
+              class="font-semibold text-gray-800 text-sm sm:text-base hover:text-rose-500 transition-colors"
+            >
+              {{ currentMonthName() }}
+            </button>
+            <button
+              type="button"
+              (click)="showYearsView()"
+              class="font-semibold text-gray-800 text-sm sm:text-base hover:text-rose-500 transition-colors"
+            >
+              {{ currentYear() }}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            (click)="nextMonth()"
+            class="p-1.5 sm:p-2 rounded-lg hover:bg-rose-50 text-gray-600 hover:text-rose-500 transition-colors"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Días de la semana -->
+        <div class="grid grid-cols-7 gap-0.5 sm:gap-1 mb-1 sm:mb-2">
+          @for (day of weekDays; track day) {
+            <div class="text-center text-xs font-medium text-gray-500 py-1 sm:py-2">
+              {{ day }}
+            </div>
+          }
+        </div>
+
+        <!-- Días del mes -->
+        <div class="grid grid-cols-7 gap-0.5 sm:gap-1">
+          @for (day of calendarDays(); track day.date) {
+            <button
+              type="button"
+              (click)="selectDate(day.date)"
+              [disabled]="day.isDisabled"
+              [class]="'w-8 h-8 sm:w-9 sm:h-9 text-xs sm:text-sm rounded-lg transition-all duration-200 ' +
+                (day.isSelected
+                  ? 'bg-rose-500 text-white font-bold shadow-md'
+                  : day.isToday
+                    ? 'bg-rose-100 text-rose-600 font-semibold'
+                    : day.isCurrentMonth
+                      ? 'text-gray-700 hover:bg-rose-50 hover:text-rose-500'
+                      : 'text-gray-300') +
+                (day.isDisabled ? ' opacity-40 cursor-not-allowed' : ' cursor-pointer')"
+            >
+              {{ day.day }}
+            </button>
+          }
+        </div>
+
+        <!-- Botón de hoy -->
+        <div class="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-rose-100">
+          <button
+            type="button"
+            (click)="selectDate(formatTodayDate())"
+            class="w-full py-1.5 sm:py-2 text-xs sm:text-sm text-rose-500 hover:text-rose-700 font-medium transition-colors"
+          >
+            Hoy
+          </button>
+        </div>
+      }
     </div>
   }
 

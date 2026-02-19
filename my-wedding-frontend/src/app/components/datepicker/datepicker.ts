@@ -1,6 +1,9 @@
 import { Component, input, output, forwardRef, signal, computed } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+/** Vista actual del datepicker */
+type DatepickerView = 'days' | 'months' | 'years';
+
 @Component({
   selector: '.appDatepicker',
   imports: [],
@@ -54,8 +57,14 @@ export class Datepicker implements ControlValueAccessor {
   /** Estado de calendario abierto */
   protected isCalendarOpen = signal<boolean>(false);
 
+  /** Vista actual del datepicker */
+  protected currentView = signal<DatepickerView>('days');
+
   /** Mes y año actual para navegación */
   protected currentMonth = signal<Date>(new Date());
+
+  /** Década actual para la vista de años */
+  protected currentDecade = signal<number>(Math.floor(new Date().getFullYear() / 10) * 10);
 
   /** Callbacks para ControlValueAccessor */
   private onChange: (value: string) => void = () => {};
@@ -64,17 +73,60 @@ export class Datepicker implements ControlValueAccessor {
   /** Días de la semana */
   protected weekDays = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
 
+  /** Nombres de los meses */
+  protected monthNames = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+
+  /** Nombres cortos de los meses para el grid */
+  protected monthNamesShort = [
+    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+  ];
+
   /** Nombre del mes actual */
   protected currentMonthName = computed(() => {
-    const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-    return months[this.currentMonth().getMonth()];
+    return this.monthNames[this.currentMonth().getMonth()];
   });
 
   /** Año actual */
   protected currentYear = computed(() => this.currentMonth().getFullYear());
+
+  /** Rango de años para la vista de años (20 años) */
+  protected yearsInDecade = computed(() => {
+    const startYear = this.currentDecade();
+    const years: { year: number; isSelected: boolean; isCurrentYear: boolean; isDisabled: boolean }[] = [];
+    const currentYear = new Date().getFullYear();
+    const selectedYear = this.value() ? parseInt(this.value().split('-')[0]) : null;
+
+    for (let i = 0; i < 20; i++) {
+      const year = startYear + i;
+      years.push({
+        year,
+        isSelected: selectedYear === year,
+        isCurrentYear: currentYear === year,
+        isDisabled: this.isYearDisabled(year),
+      });
+    }
+    return years;
+  });
+
+  /** Meses para la vista de meses */
+  protected monthsGrid = computed(() => {
+    const year = this.currentMonth().getFullYear();
+    const selectedMonth = this.value() ? parseInt(this.value().split('-')[1]) - 1 : null;
+    const selectedYear = this.value() ? parseInt(this.value().split('-')[0]) : null;
+    const currentDate = new Date();
+
+    return this.monthNamesShort.map((name, index) => ({
+      name,
+      month: index,
+      isSelected: selectedYear === year && selectedMonth === index,
+      isCurrentMonth: currentDate.getMonth() === index && currentDate.getFullYear() === year,
+      isDisabled: this.isMonthDisabled(year, index),
+    }));
+  });
 
   /** Días del mes actual para el calendario */
   protected calendarDays = computed(() => {
@@ -155,6 +207,7 @@ export class Datepicker implements ControlValueAccessor {
     if (value) {
       const date = new Date(value);
       this.currentMonth.set(new Date(date.getFullYear(), date.getMonth(), 1));
+      this.currentDecade.set(Math.floor(date.getFullYear() / 10) * 10);
     }
   }
 
@@ -184,6 +237,9 @@ export class Datepicker implements ControlValueAccessor {
    */
   toggleCalendar(): void {
     if (this.isDisabled()) return;
+    if (!this.isCalendarOpen()) {
+      this.currentView.set('days');
+    }
     this.isCalendarOpen.update(v => !v);
   }
 
@@ -192,9 +248,45 @@ export class Datepicker implements ControlValueAccessor {
    */
   closeCalendar(): void {
     this.isCalendarOpen.set(false);
+    this.currentView.set('days');
     this.isTouched.set(true);
     this.onTouched();
     this.blurred.emit(this.value());
+  }
+
+  /**
+   * Cambia a la vista de meses
+   */
+  showMonthsView(): void {
+    this.currentView.set('months');
+  }
+
+  /**
+   * Cambia a la vista de años
+   */
+  showYearsView(): void {
+    this.currentDecade.set(Math.floor(this.currentYear() / 10) * 10);
+    this.currentView.set('years');
+  }
+
+  /**
+   * Selecciona un año y vuelve a la vista de meses
+   */
+  selectYear(year: number): void {
+    if (this.isYearDisabled(year)) return;
+    const current = this.currentMonth();
+    this.currentMonth.set(new Date(year, current.getMonth(), 1));
+    this.currentView.set('months');
+  }
+
+  /**
+   * Selecciona un mes y vuelve a la vista de días
+   */
+  selectMonth(month: number): void {
+    const year = this.currentMonth().getFullYear();
+    if (this.isMonthDisabled(year, month)) return;
+    this.currentMonth.set(new Date(year, month, 1));
+    this.currentView.set('days');
   }
 
   /**
@@ -226,6 +318,36 @@ export class Datepicker implements ControlValueAccessor {
   }
 
   /**
+   * Navega a la década anterior
+   */
+  previousDecade(): void {
+    this.currentDecade.update(d => d - 20);
+  }
+
+  /**
+   * Navega a la década siguiente
+   */
+  nextDecade(): void {
+    this.currentDecade.update(d => d + 20);
+  }
+
+  /**
+   * Navega al año anterior (en vista de meses)
+   */
+  previousYear(): void {
+    const current = this.currentMonth();
+    this.currentMonth.set(new Date(current.getFullYear() - 1, current.getMonth(), 1));
+  }
+
+  /**
+   * Navega al año siguiente (en vista de meses)
+   */
+  nextYear(): void {
+    const current = this.currentMonth();
+    this.currentMonth.set(new Date(current.getFullYear() + 1, current.getMonth(), 1));
+  }
+
+  /**
    * Formatea una fecha a YYYY-MM-DD
    */
   private formatDate(year: number, month: number, day: number): string {
@@ -242,6 +364,36 @@ export class Datepicker implements ControlValueAccessor {
   private isDateDisabled(date: string): boolean {
     if (this.minDate() && date < this.minDate()) return true;
     if (this.maxDate() && date > this.maxDate()) return true;
+    return false;
+  }
+
+  /**
+   * Verifica si un año está deshabilitado
+   */
+  private isYearDisabled(year: number): boolean {
+    if (this.minDate()) {
+      const minYear = parseInt(this.minDate().split('-')[0]);
+      if (year < minYear) return true;
+    }
+    if (this.maxDate()) {
+      const maxYear = parseInt(this.maxDate().split('-')[0]);
+      if (year > maxYear) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Verifica si un mes está deshabilitado
+   */
+  private isMonthDisabled(year: number, month: number): boolean {
+    if (this.minDate()) {
+      const [minYear, minMonth] = this.minDate().split('-').map(Number);
+      if (year < minYear || (year === minYear && month < minMonth - 1)) return true;
+    }
+    if (this.maxDate()) {
+      const [maxYear, maxMonth] = this.maxDate().split('-').map(Number);
+      if (year > maxYear || (year === maxYear && month > maxMonth - 1)) return true;
+    }
     return false;
   }
 
