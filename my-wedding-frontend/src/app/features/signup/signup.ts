@@ -9,6 +9,7 @@ import { Input } from '../../components/input/input';
 import { Dropdown, type DropdownOption } from '../../components/dropdown/dropdown';
 import { Datepicker } from '../../components/datepicker/datepicker';
 import { AuthService } from '../../core/api/auth.service';
+import { AlertService } from '../../components/alert/alert.service';
 
 /**
  * Validador personalizado para verificar que las contraseñas coincidan
@@ -47,6 +48,7 @@ export class Signup {
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
+  private alertService = inject(AlertService);
 
   /** Estado de carga durante el registro */
   isLoading = signal(false);
@@ -205,8 +207,10 @@ export class Signup {
     // Simulación de registro exitoso después de 2 segundos
     setTimeout(() => {
       this.isLoading.set(false);
-      // Redirigir al login después del registro exitoso
-      this.router.navigate(['/auth/login']);
+      this.alertService.success('¡Registro exitoso!', 'Tu cuenta ha sido creada correctamente.').then(() => {
+        // Redirigir al login después de cerrar la alerta
+        this.router.navigate(['/app/login']);
+      });
     }, 2000);
 
     /*
