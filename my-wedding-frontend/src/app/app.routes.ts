@@ -19,8 +19,14 @@ export const routes: Routes = [
       },
       {
         path: 'confirm/:token',
-        loadComponent: () => import('./features/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
+        loadComponent: () =>
+          import('./features/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
       },
     ],
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./layouts/dashboard/dashboard').then((m) => m.Dashboard),
+    // Aquí se pueden agregar rutas hijas para las diferentes secciones del dashboard
   },
 ];

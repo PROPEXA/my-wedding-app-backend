@@ -1,0 +1,13 @@
+<app-header
+  [appName]="'My Wedding App'"
+  [navItems]="[
+    { label: 'Bodas', route: '/app/weddings' },
+    { label: 'Invitaciones', route: '/app/invitations' },
+    { label: 'Calendario', route: '/app/calendar' }
+  ]"
+  [showLogout]="true"
+  [logoutText]="'Cerrar Sesión'"
+  [logoUrl]="'logo.png'"
+  (logoutClicked)="onLogout()"
+  (navItemClicked)="onNavigate($event)"
+/>
