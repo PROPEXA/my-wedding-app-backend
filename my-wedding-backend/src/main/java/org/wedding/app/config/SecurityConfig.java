@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.wedding.app.security.JwtAuthenticationFilter;
+import org.wedding.app.security.SecurityEntryPoint;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SecurityEntryPoint securityEntryPoint;
 
     @Value("${spring.security.cors.origin}")
     private String corsOrigin;
@@ -36,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**","/api/v1/languages").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/accounts", "/api/v1/accounts/confirm").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/actuator/**")
                         .access(new WebExpressionAuthorizationManager(
@@ -47,6 +49,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(securityEntryPoint))
                 .cors(cors -> cors.configurationSource(configurationSource()));
 
         return http.build();
