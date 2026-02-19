@@ -19,7 +19,7 @@ export class AuthService {
   private tokenType = 'token_type';
 
   authenticate(auth: Auth): Observable<Date> {
-    return this.http.post<Authenticated>(`${API.baseUrl}/api/v1/login`, auth).pipe(
+    return this.http.post<Authenticated>(`${API.baseUrl}/api/v1/auth/login`, auth).pipe(
       tap((authenticated) => this.saveTokens(authenticated)),
       map((authenticated) => {
         return authenticated.date_time;
