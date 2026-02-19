@@ -10,6 +10,7 @@ import { Dropdown, type DropdownOption } from '../../components/dropdown/dropdow
 import { Datepicker } from '../../components/datepicker/datepicker';
 import { AuthService } from '../../core/api/auth.service';
 import { AlertService } from '../../components/alert/alert.service';
+import { FormHeader } from "../../components/form-header/form-header";
 
 /**
  * Validador personalizado para verificar que las contraseñas coincidan
@@ -40,7 +41,7 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-signup',
-  imports: [Button, Input, Dropdown, Datepicker, RouterLink, ReactiveFormsModule],
+  imports: [Button, Input, Dropdown, Datepicker, RouterLink, ReactiveFormsModule, FormHeader],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })

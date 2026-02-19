@@ -6,10 +6,11 @@ import { AuthService } from '../../core/api/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
+import { FormHeader } from "../../components/form-header/form-header";
 
 @Component({
   selector: 'app-login',
-  imports: [Button, Input, RouterLink, ReactiveFormsModule],
+  imports: [Button, Input, RouterLink, ReactiveFormsModule, FormHeader],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
