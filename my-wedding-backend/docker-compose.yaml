@@ -12,7 +12,7 @@ services:
     container_name: wedding-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: wedding_db
+      POSTGRES_DB: db_my_wedding_app
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       PGDATA: /var/lib/postgresql/data/pgdata
@@ -23,7 +23,7 @@ services:
     networks:
       - my-wedding-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d wedding_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d db_my_wedding_app"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,6 +36,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: ${IMAGE_NAME:-my-wedding-backend}:${IMAGE_TAG:-latest}
     container_name: wedding-backend
     restart: unless-stopped
     depends_on:
@@ -43,7 +44,7 @@ services:
         condition: service_healthy
     environment:
       # Database Configuration
-      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/wedding_db}
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/db_my_wedding_app}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
