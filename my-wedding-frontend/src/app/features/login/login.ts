@@ -7,10 +7,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { FormHeader } from "../../components/form-header/form-header";
+import { FormContainer } from "../../components/form-container/form-container";
 
 @Component({
   selector: 'app-login',
-  imports: [Button, Input, RouterLink, ReactiveFormsModule, FormHeader],
+  imports: [Button, Input, RouterLink, ReactiveFormsModule, FormHeader, FormContainer],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
