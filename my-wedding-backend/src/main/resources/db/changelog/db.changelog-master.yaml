@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/0005-alter-lat-lng-event.sql
   - include:
       file: db/changelog/0006-statistics-table.sql
+  - include:
+      file: db/changelog/0007-anter-event-timestamp.sql

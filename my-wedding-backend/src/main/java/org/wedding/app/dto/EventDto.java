@@ -7,6 +7,7 @@ import org.wedding.app.dto.group.Post;
 import org.wedding.app.dto.group.Update;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * DTO for {@link org.wedding.app.model.TblEvent}
@@ -19,11 +20,11 @@ public record EventDto(
 
         @JsonProperty("start_date")
         @NotNull(message = "La fecha de inicio es requerida", groups = {Post.class, Update.class})
-        LocalDateTime startDate,
+        OffsetDateTime startDate,
 
         @JsonProperty("end_date")
         @NotNull(message = "La fecha de fin es requerida", groups = {Post.class, Update.class})
-        LocalDateTime endDate,
+        OffsetDateTime endDate,
 
         @JsonProperty("title")
         @NotBlank(message = "Titulo de evento es requerido", groups = {Post.class, Update.class})

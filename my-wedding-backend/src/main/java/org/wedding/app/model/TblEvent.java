@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -31,10 +32,10 @@ public class TblEvent {
 
     @NotNull
     @Column(name = "eve_date_ini", nullable = false)
-    private LocalDateTime eveDateIni;
+    private OffsetDateTime eveDateIni;
 
     @Column(name = "eve_date_fin")
-    private LocalDateTime eveDateFin;
+    private OffsetDateTime eveDateFin;
 
     @Size(max = 100)
     @NotNull

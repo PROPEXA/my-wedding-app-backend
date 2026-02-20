@@ -41,6 +41,9 @@ public class WeddingEventServiceImpl implements WeddingEventTypeService, Wedding
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "wedding_events", key = "#dto.weddingId()")
+    })
     public int saveNewEvent(EventDto dto) {
         boolean exists = tblWeddingRepository.existsByIdAndWedAccount(dto.weddingId(), getAccountId());
         if (!exists) {
