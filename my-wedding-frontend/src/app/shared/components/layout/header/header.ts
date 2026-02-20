@@ -1,5 +1,5 @@
 import { Component, inject, input, output, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/api/auth.service';
 
 /**
@@ -75,7 +75,6 @@ export interface HeaderConfig {
   styleUrl: './header.css',
 })
 export class Header {
-  private router = inject(Router);
   private authService = inject(AuthService);
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -102,7 +101,7 @@ export class Header {
   logoutText = input<string>('Cerrar Sesión');
 
   /** Ruta del home al hacer clic en el logo */
-  homeRoute = input<string>('/dashboard');
+  homeRoute = input<string>('/app');
 
   // ═══════════════════════════════════════════════════════════════════════════
   // OUTPUTS

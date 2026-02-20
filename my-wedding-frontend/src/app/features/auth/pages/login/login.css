@@ -4,9 +4,3 @@
   width: 100%;
   padding: 0;
 }
-
-@media (min-width: 640px) {
-  :host {
-    padding: 0 1rem;
-  }
-}
