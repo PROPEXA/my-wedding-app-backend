@@ -87,7 +87,7 @@ export class Login {
       .subscribe({
         next: () => {
           // Redirigir al dashboard o página principal después del login
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/app']);
         },
         error: (error) => {
           this.serverError.set(error.message || 'Error al iniciar sesión. Inténtalo de nuevo.');

@@ -52,7 +52,7 @@
           <a
             [routerLink]="item.route"
             routerLinkActive="bg-white/20"
-            [routerLinkActiveOptions]="{ exact: false }"
+            [routerLinkActiveOptions]="{ exact: true }"
             (click)="onNavItemClick(item)"
             [class.opacity-50]="item.disabled"
             [class.cursor-not-allowed]="item.disabled"
@@ -130,7 +130,7 @@
           <a
             [routerLink]="item.route"
             routerLinkActive="bg-white/20"
-            [routerLinkActiveOptions]="{ exact: false }"
+            [routerLinkActiveOptions]="{ exact: true }"
             (click)="onNavItemClick(item)"
             [class.opacity-50]="item.disabled"
             [class.cursor-not-allowed]="item.disabled"

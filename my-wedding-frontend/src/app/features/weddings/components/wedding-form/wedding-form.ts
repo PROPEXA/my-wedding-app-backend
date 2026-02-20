@@ -315,7 +315,7 @@ export class WeddingForm implements OnInit {
             : 'Los cambios han sido guardados';
         this.alertService.success('¡Éxito!', message);
         this.saved.emit(wedding);
-        this.router.navigate(['/dashboard/weddings']);
+        this.router.navigate(['/app/weddings']);
       },
       error: (error) => {
         logger.error(`Error saving wedding: ${error?.message || error}`);
@@ -331,7 +331,7 @@ export class WeddingForm implements OnInit {
    */
   onCancel(): void {
     this.cancelled.emit();
-    this.router.navigate(['/dashboard/weddings']);
+    this.router.navigate(['/app/weddings']);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

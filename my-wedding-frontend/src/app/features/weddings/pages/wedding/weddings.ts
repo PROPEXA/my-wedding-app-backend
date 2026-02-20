@@ -73,7 +73,7 @@ export class Weddings implements OnInit {
    * Navega a la página de creación de nueva boda
    */
   onCreateWedding = (): void => {
-    this.router.navigate(['/dashboard/weddings/new']);
+    this.router.navigate(['/app/weddings/new']);
   };
 
   /**
@@ -84,10 +84,10 @@ export class Weddings implements OnInit {
     switch (event.action) {
       case 'view':
         this.weddingSelected.emit(event.wedding);
-        this.router.navigate(['/dashboard/weddings', event.wedding.id]);
+        this.router.navigate(['/app/weddings', event.wedding.id]);
         break;
       case 'edit':
-        this.router.navigate(['/dashboard/weddings', event.wedding.id, 'edit']);
+        this.router.navigate(['/app/weddings', event.wedding.id, 'edit']);
         break;
       case 'delete':
         await this.deleteWedding(event.wedding);
