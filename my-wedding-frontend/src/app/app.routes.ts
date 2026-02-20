@@ -27,6 +27,15 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./layouts/dashboard/dashboard').then((m) => m.Dashboard),
-    // Aquí se pueden agregar rutas hijas para las diferentes secciones del dashboard
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/welcome/welcome').then((m) => m.Welcome),
+      },
+      {
+        path: 'weddings',
+        loadComponent: () => import('./layouts/weddings/weddings').then((m) => m.Weddings),
+      },
+    ],
   },
 ];

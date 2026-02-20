@@ -1,0 +1,112 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     WEDDING CARD - Tarjeta individual de boda
+     ═══════════════════════════════════════════════════════════════════ -->
+<article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
+  <!-- Header de la tarjeta -->
+  <div class="relative bg-linear-to-r from-rose-400 to-pink-500 px-5 py-4">
+    <div class="flex items-center justify-end">
+      <div class="flex items-center gap-2">
+        <!-- Días restantes -->
+        <span class="px-2 py-1 bg-white/90 rounded-lg text-xs font-semibold text-rose-600">
+          {{ getDaysRemaining(wedding().eventDate) }} días
+        </span>
+
+        <!-- Menú de acciones -->
+        <div class="relative">
+          <button
+            (click)="onToggleMenu($event)"
+            class="w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-colors"
+          >
+            <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown menú -->
+          @if (isMenuOpen()) {
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10 animate-fade-in">
+              <button
+                (click)="onAction('view')"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-rose-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                Ver detalles
+              </button>
+              <button
+                (click)="onAction('edit')"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-rose-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+              </button>
+              <div class="border-t border-gray-100 my-1"></div>
+              <button
+                (click)="onAction('delete')"
+                class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido de la tarjeta -->
+  <div class="p-5">
+    <!-- Nombre de la pareja -->
+    <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-rose-500 transition-colors">
+      {{ wedding().coupleName }}
+    </h3>
+
+    <!-- Fecha y lugar -->
+    <div class="space-y-2 mb-4">
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        {{ formatDate(wedding().eventDate) }}
+      </div>
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        {{ wedding().venue }}
+      </div>
+    </div>
+
+    <!-- Barra de progreso de confirmaciones -->
+    <div class="mb-3">
+      <div class="flex items-center justify-between text-sm mb-1">
+        <span class="text-gray-500">Confirmaciones</span>
+        <span class="font-semibold text-gray-700">
+          {{ wedding().confirmedGuests }}/{{ wedding().totalGuests }}
+        </span>
+      </div>
+      <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          class="h-full bg-gradient-to-r from-rose-400 to-pink-500 rounded-full transition-all duration-500"
+          [style.width.%]="getConfirmationPercentage(wedding().confirmedGuests, wedding().totalGuests)"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Botón Ver detalles -->
+    <button
+      (click)="onAction('view')"
+      class="w-full py-2 text-center text-rose-500 hover:text-rose-600 font-medium text-sm transition-colors"
+    >
+      Ver detalles →
+    </button>
+  </div>
+</article>

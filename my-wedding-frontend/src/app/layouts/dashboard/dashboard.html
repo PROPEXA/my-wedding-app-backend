@@ -1,9 +1,11 @@
+<div class="min-h-screen bg-linear-to-br from-rose-50 via-pink-50 to-amber-50 flex flex-col justify-center px-0 ">
 <app-header
   [appName]="'My Wedding App'"
   [navItems]="[
-    { label: 'Bodas', route: '/app/weddings' },
-    { label: 'Invitaciones', route: '/app/invitations' },
-    { label: 'Calendario', route: '/app/calendar' }
+    { label: 'Inicio', route: '/dashboard' },
+    { label: 'Bodas', route: '/dashboard/weddings' },
+    { label: 'Invitaciones', route: '/dashboard/invitations' },
+    { label: 'Calendario', route: '/dashboard/calendar' }
   ]"
   [showLogout]="true"
   [logoutText]="'Cerrar Sesión'"
@@ -11,3 +13,8 @@
   (logoutClicked)="onLogout()"
   (navItemClicked)="onNavigate($event)"
 />
+
+<router-outlet />
+<app-footer/>
+</div>
+
