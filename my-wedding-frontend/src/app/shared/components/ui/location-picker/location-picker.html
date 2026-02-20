@@ -1,0 +1,143 @@
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     LOCATION PICKER - Selector de ubicación con Google Maps
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<div class="location-picker-wrapper mb-4">
+  <!-- LABEL -->
+  @if (label()) {
+    <label
+      [for]="locationPickerId()"
+      class="block text-sm font-medium text-gray-700 mb-1.5"
+    >
+      {{ label() }}
+      @if (required()) {
+        <span class="text-red-500 ml-0.5">*</span>
+      }
+    </label>
+  }
+
+  <!-- CONTAINER -->
+  <div
+    class="location-picker-container rounded-xl border overflow-hidden"
+    [class.border-gray-200]="!errorMessage()"
+    [class.border-red-300]="errorMessage()"
+    [class.opacity-60]="isDisabled()"
+  >
+    <!-- BARRA DE ACCIONES -->
+    <div class="search-container p-3 bg-gray-50 border-b border-gray-200">
+      <div class="flex gap-2 items-center">
+        <p class="flex-1 text-sm text-gray-500">
+          Haz clic en el mapa o usa tu ubicación actual
+        </p>
+
+        <!-- Botón de Geolocalización -->
+        @if (geolocationAvailable() && !isDisabled()) {
+          <button
+            type="button"
+            (click)="getCurrentLocation()"
+            [disabled]="isGeolocating()"
+            class="flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-300 text-white rounded-lg transition-colors text-sm font-medium"
+            title="Usar mi ubicación actual"
+          >
+            @if (isGeolocating()) {
+              <svg class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+              <span>Obteniendo...</span>
+            } @else {
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <span>Mi ubicación</span>
+            }
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- MAPA -->
+    <div class="map-wrapper relative">
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+          <div class="text-center">
+            <svg class="animate-spin h-8 w-8 text-purple-500 mx-auto mb-2" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <p class="text-sm text-gray-500">Cargando mapa...</p>
+          </div>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (mapError()) {
+        <div class="absolute inset-0 flex items-center justify-center bg-red-50 z-10">
+          <div class="text-center p-4">
+            <svg class="w-12 h-12 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <p class="text-sm text-red-600">{{ mapError() }}</p>
+          </div>
+        </div>
+      }
+
+      <!-- Map Container -->
+      <div #mapContainer class="map-container h-64 w-full"></div>
+    </div>
+
+    <!-- COORDENADAS SELECCIONADAS -->
+    @if (coordinates().latitude && coordinates().longitude) {
+      <div class="coordinates-display p-3 bg-white border-t border-gray-200">
+        <div class="flex items-start gap-2">
+          <svg class="w-5 h-5 text-purple-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div class="flex-1 min-w-0">
+            @if (currentAddress()) {
+              <p class="text-sm text-gray-800 font-medium truncate">{{ currentAddress() }}</p>
+            }
+            <p class="text-xs text-gray-500 mt-0.5">
+              Lat: {{ coordinates().latitude }} · Lng: {{ coordinates().longitude }}
+            </p>
+          </div>
+          @if (!isDisabled()) {
+            <button
+              type="button"
+              (click)="clearLocation()"
+              class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              title="Limpiar ubicación"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="coordinates-display p-3 bg-gray-50 border-t border-gray-200">
+        <p class="text-sm text-gray-500 text-center">
+          <span class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Haz clic en el mapa o busca una dirección para seleccionar la ubicación
+          </span>
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- ERROR MESSAGE -->
+  @if (errorMessage() && isTouched()) {
+    <p class="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+      </svg>
+      {{ errorMessage() }}
+    </p>
+  }
+</div>

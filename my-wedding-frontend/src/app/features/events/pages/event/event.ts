@@ -11,6 +11,7 @@ import { Wedding } from '../../../../core/model/wedding.model';
 import { WeddingService } from '../../../../core/api/wedding.service';
 import { WeddingEventService } from '../../../../core/api/wedding-event.service';
 import { ServerException } from '../../../../core/exception/server.exception';
+import { logger } from '../../../../core/utils/log.util';
 
 @Component({
   selector: 'app-event',
@@ -91,13 +92,16 @@ export class Event implements OnInit {
    */
   private setupWeddingListener(): void {
     this.weddingControl.valueChanges.subscribe((value) => {
-      if (value && typeof value === 'number') {
-        this.selectedWeddingId.set(value);
-        this.loadEvents(value);
-      } else {
-        this.selectedWeddingId.set(null);
-        this.events.set([]);
+      if (value) {
+        const weddingId = typeof value === 'number' ? value : Number(value);
+        if (!isNaN(weddingId)) {
+          this.selectedWeddingId.set(weddingId);
+          this.loadEvents(weddingId);
+          return;
+        }
       }
+      this.selectedWeddingId.set(null);
+      this.events.set([]);
     });
   }
 
