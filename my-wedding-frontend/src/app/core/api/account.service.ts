@@ -1,5 +1,5 @@
 import { inject, Inject, Injectable } from '@angular/core';
-import { Account } from '../model/account.mode';
+import { Account } from '../model/account.model';
 import { HttpClient } from '@angular/common/http';
 import { API } from '../env/env.dev';
 import { catchError, Observable, throwError } from 'rxjs';

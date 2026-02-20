@@ -23,10 +23,10 @@
   } @else {
     <!-- Grid de bodas -->
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (wedding of weddings(); track wedding.id) {
+      @for (wedding of weddings(); track wedding.id ?? $index) {
         <app-wedding-card
           [wedding]="wedding"
-          [isMenuOpen]="isMenuOpen(wedding.id)"
+          [isMenuOpen]="wedding.id !== undefined && isMenuOpen(wedding.id)"
           (action)="onCardAction($event)"
           (menuToggle)="toggleMenu($event)"
         />

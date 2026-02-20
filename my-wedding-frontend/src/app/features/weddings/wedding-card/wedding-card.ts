@@ -1,5 +1,5 @@
 import { Component, input, output, signal } from '@angular/core';
-import { Wedding, WeddingAction, WeddingActionEvent } from '../wedding.model';
+import { Wedding, WeddingAction, WeddingActionEvent, WeddingUtils } from '../wedding.model';
 
 /**
  * Wedding Card Component
@@ -48,6 +48,27 @@ export class WeddingCard {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /**
+   * Obtiene el nombre de la pareja
+   */
+  getCoupleName(): string {
+    return WeddingUtils.getCoupleName(this.wedding());
+  }
+
+  /**
+   * Obtiene el nombre completo de la novia
+   */
+  getBrideFullName(): string {
+    return WeddingUtils.getBrideFullName(this.wedding());
+  }
+
+  /**
+   * Obtiene el nombre completo del novio
+   */
+  getGroomFullName(): string {
+    return WeddingUtils.getGroomFullName(this.wedding());
+  }
+
+  /**
    * Emite una acción sobre la boda
    */
   onAction(actionType: WeddingAction): void {
@@ -59,36 +80,21 @@ export class WeddingCard {
    */
   onToggleMenu(event: Event): void {
     event.stopPropagation();
-    this.menuToggle.emit(this.wedding().id);
+    const weddingId = this.wedding().id;
+    if (weddingId !== undefined) {
+      this.menuToggle.emit(weddingId);
+    }
   }
 
   /**
    * Formatea la fecha para mostrar
    */
-  formatDate(date: Date): string {
+  formatDate(date: Date | undefined): string {
+    if (!date) return 'Sin fecha';
     return new Intl.DateTimeFormat('es-ES', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     }).format(new Date(date));
-  }
-
-  /**
-   * Calcula los días restantes hasta el evento
-   */
-  getDaysRemaining(eventDate: Date): number {
-    const today = new Date();
-    const event = new Date(eventDate);
-    const diffTime = event.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-  }
-
-  /**
-   * Calcula el porcentaje de confirmaciones
-   */
-  getConfirmationPercentage(confirmed: number, total: number): number {
-    if (total === 0) return 0;
-    return Math.round((confirmed / total) * 100);
   }
 }

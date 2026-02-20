@@ -11,16 +11,16 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadComponent: () => import('./features/login/login').then((m) => m.Login),
+        loadComponent: () => import('./features/accounts/login/login').then((m) => m.Login),
       },
       {
         path: 'signup',
-        loadComponent: () => import('./features/signup/signup').then((m) => m.Signup),
+        loadComponent: () => import('./features/accounts/signup/signup').then((m) => m.Signup),
       },
       {
         path: 'confirm/:token',
         loadComponent: () =>
-          import('./features/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
+          import('./features/accounts/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
       },
     ],
   },
@@ -35,6 +35,16 @@ export const routes: Routes = [
       {
         path: 'weddings',
         loadComponent: () => import('./layouts/weddings/weddings').then((m) => m.Weddings),
+      },
+      {
+        path: 'weddings/new',
+        loadComponent: () =>
+          import('./layouts/weddings/wedding-new/wedding-new').then((m) => m.WeddingNew),
+      },
+      {
+        path: 'weddings/:id/edit',
+        loadComponent: () =>
+          import('./layouts/weddings/wedding-edit/wedding-edit').then((m) => m.WeddingEdit),
       },
     ],
   },

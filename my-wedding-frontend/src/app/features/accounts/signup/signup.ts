@@ -9,17 +9,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Button } from '../../components/button/button';
-import { Input } from '../../components/input/input';
-import { Dropdown, type DropdownOption } from '../../components/dropdown/dropdown';
-import { Datepicker } from '../../components/datepicker/datepicker';
-import { AlertService } from '../../components/alert/alert.service';
-import { FormHeader } from '../../components/form-header/form-header';
-import { FormContainer } from '../../components/form-container/form-container';
-import { LanguageService } from '../../core/api/language.service';
-import { AccountService } from '../../core/api/account.service';
-import { logger } from '../../core/utils/log.util';
-import { Account } from '../../core/model/account.mode';
+import { Button } from '../../../components/button/button';
+import { Input } from '../../../components/input/input';
+import { Dropdown, type DropdownOption } from '../../../components/dropdown/dropdown';
+import { Datepicker } from '../../../components/datepicker/datepicker';
+import { AlertService } from '../../../components/alert/alert.service';
+import { FormHeader } from '../../../components/form-header/form-header';
+import { FormContainer } from '../../../components/form-container/form-container';
+import { LanguageService } from '../../../core/api/language.service';
+import { AccountService } from '../../../core/api/account.service';
+import { logger } from '../../../core/utils/log.util';
+import { Account } from '../../../core/model/account.model';
 
 /**
  * Validador personalizado para verificar que las contraseñas coincidan

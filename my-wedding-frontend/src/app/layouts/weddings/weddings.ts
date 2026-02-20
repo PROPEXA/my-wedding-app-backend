@@ -3,26 +3,10 @@ import { Router } from '@angular/router';
 import { Button } from '../../components/button/button';
 import { AlertService } from '../../components/alert/alert.service';
 import { WeddingList } from '../../features/weddings/wedding-list/wedding-list';
-import { Wedding, WeddingActionEvent } from '../../features/weddings/wedding.model';
+import { Wedding, WeddingActionEvent, WeddingUtils } from '../../features/weddings/wedding.model';
+import { WeddingService } from '../../core/api/wedding.service';
+import { ServerException } from '../../core/exception/server.exception';
 
-/**
- * Weddings Component - Panel de control para gestión de bodas
- *
- * @description
- * Componente principal para la gestión de bodas que incluye:
- * - Listado de bodas con información resumida
- * - Menú desplegable con acciones (ver, editar, eliminar)
- * - Botón para crear nuevas bodas
- * - Filtros y búsqueda
- * - Paginación
- *
- * @example
- * ```html
- * <app-weddings />
- * ```
- *
- * @publicApi
- */
 @Component({
   selector: 'app-weddings',
   imports: [Button, WeddingList],
@@ -32,6 +16,7 @@ import { Wedding, WeddingActionEvent } from '../../features/weddings/wedding.mod
 export class Weddings implements OnInit {
   private router = inject(Router);
   private alertService = inject(AlertService);
+  private weddingService = inject(WeddingService);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // OUTPUTS
@@ -70,56 +55,18 @@ export class Weddings implements OnInit {
 
   /**
    * Carga la lista de bodas desde el servidor
-   * TODO: Conectar con el servicio real
    */
   private loadWeddings(): void {
     this.isLoading.set(true);
-
-    // Datos de ejemplo (reemplazar con llamada al servicio)
-    setTimeout(() => {
-      this.weddings.set([
-        {
-          id: 1,
-          coupleName: 'Ana & Carlos',
-          eventDate: new Date('2026-06-15'),
-          venue: 'Hacienda Los Pinos',
-          confirmedGuests: 85,
-          totalGuests: 120,
-          status: 'confirmed',
-          coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
-        },
-        {
-          id: 2,
-          coupleName: 'María & Juan',
-          eventDate: new Date('2026-09-20'),
-          venue: 'Jardín Botánico',
-          confirmedGuests: 45,
-          totalGuests: 80,
-          status: 'planning',
-          coverImage: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400',
-        },
-        {
-          id: 3,
-          coupleName: 'Laura & Pedro',
-          eventDate: new Date('2026-12-10'),
-          venue: 'Hotel Grand Plaza',
-          confirmedGuests: 0,
-          totalGuests: 150,
-          status: 'draft',
-        },
-        {
-          id: 4,
-          coupleName: 'Sofía & Miguel',
-          eventDate: new Date('2025-11-25'),
-          venue: 'Casa de Campo',
-          confirmedGuests: 95,
-          totalGuests: 95,
-          status: 'completed',
-          coverImage: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400',
-        },
-      ]);
-      this.isLoading.set(false);
-    }, 500);
+    this.weddingService.getAllMyWeddings().subscribe({
+      next: (weddings) => {
+        this.weddings.set(weddings);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
   }
 
   /**
@@ -153,17 +100,31 @@ export class Weddings implements OnInit {
    * @param wedding La boda a eliminar
    */
   private async deleteWedding(wedding: Wedding): Promise<void> {
+    const coupleName = WeddingUtils.getCoupleName(wedding);
     const result = await this.alertService.question(
       '¿Eliminar boda?',
-      `¿Estás seguro de que deseas eliminar la boda de ${wedding.coupleName}? Esta acción no se puede deshacer.`,
-      { confirmText: 'Eliminar', cancelText: 'Cancelar' }
+      `¿Estás seguro de que deseas eliminar la boda de ${coupleName}? Esta acción no se puede deshacer.`,
+      { confirmText: 'Eliminar', cancelText: 'Cancelar' },
     );
 
     if (result.confirmed) {
-      // TODO: Llamar al servicio para eliminar
-      this.weddings.update((list) => list.filter((w) => w.id !== wedding.id));
-      this.weddingDeleted.emit(wedding);
-      this.alertService.success('Boda eliminada', 'La boda ha sido eliminada correctamente.');
+      this.weddingService.deleteWeddingById(wedding.id!).subscribe({
+        next: (response) => {
+          this.weddings.update((list) => list.filter((w) => w.id !== wedding.id));
+          this.weddingDeleted.emit(wedding);
+          this.alertService.success('Boda Eliminada', response.message);
+        },
+        error: (err) => {
+          if (err instanceof ServerException) {
+            this.alertService.error('Error al eliminar', err.message);
+          } else {
+            this.alertService.error(
+              'Error al eliminar',
+              'Ocurrió un error inesperado al eliminar la boda.',
+            );
+          }
+        },
+      });
     }
   }
 }

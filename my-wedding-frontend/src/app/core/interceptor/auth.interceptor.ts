@@ -7,6 +7,7 @@ import {
 import { inject } from '@angular/core';
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { AuthService } from '../api/auth.service';
+import { logger } from '../utils/log.util';
 
 /**
  * Flag que indica si actualmente se está renovando el token de autenticación.
@@ -22,17 +23,17 @@ const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 /**
  * Interceptor HTTP para la gestión automática de autenticación mediante tokens JWT.
- * 
+ *
  * Funcionalidades principales:
  * - Añade automáticamente el token de acceso (Bearer token) a todas las peticiones HTTP salientes
  * - Intercepta errores 401 (No autorizado) y renueva automáticamente el token de acceso
  * - Gestiona una cola de peticiones durante la renovación del token para evitar múltiples refresh simultáneos
  * - Reintenta las peticiones fallidas automáticamente después de renovar el token
- * 
+ *
  * @param req - La petición HTTP a interceptar
  * @param next - El siguiente manejador en la cadena de interceptores
  * @returns Observable con la respuesta HTTP procesada o un error
- * 
+ *
  * @example
  * ```typescript
  * // Registrar en app.config.ts
@@ -46,7 +47,7 @@ const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
-
+  logger.info(`AuthInterceptor: Interceptando petición a ${req.url} con token ${token ? 'presente' : 'ausente'}`);
   let authReq = req;
   if (token) {
     authReq = addTokenHeader(req, token);
@@ -64,11 +65,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 /**
  * Añade el token de autorización JWT al encabezado de una petición HTTP.
- * 
+ *
  * @param request - La petición HTTP original a clonar
  * @param token - El token JWT de acceso a incluir
  * @returns Una nueva instancia de la petición con el encabezado Authorization añadido
- * 
+ *
  * @private
  */
 const addTokenHeader = (request: HttpRequest<any>, token: string) => {
@@ -81,17 +82,17 @@ const addTokenHeader = (request: HttpRequest<any>, token: string) => {
 
 /**
  * Maneja los errores 401 (No autorizado) implementando una estrategia de renovación de token.
- * 
+ *
  * Cuando múltiples peticiones reciben un 401 simultáneamente:
  * - La primera petición se encarga de renovar el token
  * - Las siguientes peticiones se encolan y esperan a que el token se renueve
  * - Una vez renovado el token, todas las peticiones se reintentan automáticamente
- * 
+ *
  * @param request - La petición HTTP que recibió el error 401
  * @param next - El siguiente manejador en la cadena de interceptores
  * @param authService - Servicio de autenticación para renovar el token
  * @returns Observable con la petición reintentada o un error si la renovación falla
- * 
+ *
  * @private
  */
 const handle401Error = (

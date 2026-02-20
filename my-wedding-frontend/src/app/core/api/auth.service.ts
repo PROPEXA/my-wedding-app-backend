@@ -51,11 +51,11 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(this.accessToken);
+    return sessionStorage.getItem(this.accessToken);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshToken);
+    return sessionStorage.getItem(this.refreshToken);
   }
 
   private saveTokens(authenticated: Authenticated) {

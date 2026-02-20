@@ -2,14 +2,14 @@ import { Component, DestroyRef, inject, OnInit, signal, computed } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
-import { FormHeader } from '../../components/form-header/form-header';
-import { FormContainer } from '../../components/form-container/form-container';
-import { Button } from '../../components/button/button';
-import { AccountService } from '../../core/api/account.service';
-import { AlertService } from '../../components/alert/alert.service';
-import { Toast } from '../../components/toast/toast';
-import { ServerException } from '../../core/exception/server.exception';
-import { logger } from '../../core/utils/log.util';
+import { FormHeader } from '../../../components/form-header/form-header';
+import { FormContainer } from '../../../components/form-container/form-container';
+import { Button } from '../../../components/button/button';
+import { AccountService } from '../../../core/api/account.service';
+import { AlertService } from '../../../components/alert/alert.service';
+import { Toast } from '../../../components/toast/toast';
+import { ServerException } from '../../../core/exception/server.exception';
+import { logger } from '../../../core/utils/log.util';
 
 /** Configuración por defecto del código de confirmación */
 export interface ConfirmCodeConfig {

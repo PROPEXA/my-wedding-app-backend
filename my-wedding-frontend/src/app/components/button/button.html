@@ -4,5 +4,9 @@
   [disabled]="disabled()"
   (click)="handleClick($event)"
 >
-  <ng-content />
+  @if (text()) {
+    {{ text() }}
+  } @else {
+    <ng-content />
+  }
 </button>

@@ -64,7 +64,7 @@
       <!-- SELECCIÓN DE BODA -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <div
-          class="flex col-start-1 col-end-5 lg:col-start-2 lg:col-end-5 justify-between items-center gap-4"
+          class="flex col-start-1 col-end-5 lg:col-start-2 lg:col-end-5 justify-between items-end-safe gap-4"
         >
           <div
             class="appDropdown col-start-1 col-end-3 lg:col-start-1 lg:col-end-4 w-full"
@@ -72,7 +72,7 @@
             placeholder="Selecciona una boda"
             label="Listado de Bodas"
           ></div>
-          <app-button type="submit" theme="primary" [disabled]="false" class="mt-7"
+          <app-button type="submit" theme="primary" [disabled]="false" [fullWidth]="false"
             >Consultar</app-button
           >
         </div>

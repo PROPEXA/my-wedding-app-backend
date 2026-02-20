@@ -1,13 +1,13 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { Button } from '../../components/button/button';
-import { Input } from '../../components/input/input';
+import { Button } from '../../../components/button/button';
+import { Input } from '../../../components/input/input';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/api/auth.service';
+import { AuthService } from '../../../core/api/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
-import { FormHeader } from "../../components/form-header/form-header";
-import { FormContainer } from "../../components/form-container/form-container";
+import { FormHeader } from "../../../components/form-header/form-header";
+import { FormContainer } from "../../../components/form-container/form-container";
 
 @Component({
   selector: 'app-login',
