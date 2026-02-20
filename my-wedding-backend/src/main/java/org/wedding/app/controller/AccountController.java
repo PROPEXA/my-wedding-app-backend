@@ -22,7 +22,7 @@ import static org.wedding.app.controller.AccountController.ACCOUNT_CONTROLLER_BA
 @RestController
 @RequestMapping(ACCOUNT_CONTROLLER_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "Cuentas", description = "Operaciones relacionadas con las cuentas")
+@Tag(name = "Accounts", description = "Endpoints for managing user accounts")
 public class AccountController {
 
     public static final String ACCOUNT_CONTROLLER_BASE_URL = "/api/v1/accounts";
@@ -30,7 +30,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
-    @Operation(summary = "Crear cuenta")
+    @Operation(summary = "Create a new account")
     public ResponseEntity<ResponseDto<Object>> createNewAccount(@RequestBody
                                                         @Valid AccountDto accountDto) {
         Integer userId = accountService.saveAccount(accountDto);
@@ -46,7 +46,7 @@ public class AccountController {
     }
 
     @PostMapping("/confirm")
-    @Operation(summary = "Confirmar cuenta")
+    @Operation(summary = "Confirm account by token and email code")
     public ResponseEntity<ResponseDto<Object>> confirmAccount(@Valid @RequestBody ConfirmAccount confirmAccount) {
         accountService.confirmAccount(confirmAccount);
         return ResponseEntity.ok().body(

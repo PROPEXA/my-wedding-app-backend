@@ -16,19 +16,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/languages")
-@Tag(name = "Lenguajes", description = "Operaciones relacionadas con los lenguajes")
+@Tag(name = "Languages", description = "Endpoints for managing languages")
 public class LanguageController {
 
     private final LanguageService languageService;
 
     @GetMapping("/{iso6391}")
-    @Operation(summary = "Obtener lenguaje ISO-6391")
+    @Operation(summary = "Obtain language by ISO-6391")
     public ResponseEntity<LanguageDto> getLanguageByIso6391(@PathVariable String iso6391) {
         return ResponseEntity.ok(languageService.getLanguageByIso6391(iso6391));
     }
 
     @GetMapping
-    @Operation(summary = "Obtener todos los lenguajes")
+    @Operation(summary = "Obtain all languages")
     public ResponseEntity<List<LanguageDto>> getAllLanguages() {
         return ResponseEntity.ok(languageService.getAllLanguages());
     }
