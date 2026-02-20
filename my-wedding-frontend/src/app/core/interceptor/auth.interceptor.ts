@@ -113,6 +113,7 @@ const handle401Error = (
       }),
       catchError((err) => {
         isRefreshing = false;
+        authService.logout(); // Cerrar sesión si la renovación falla
         // El logout ya se maneja en el servicio, aquí solo propagamos el error
         return throwError(() => err);
       }),
