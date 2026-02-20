@@ -1,0 +1,31 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     EMPTY STATE - Estado vacío cuando no hay eventos
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="bg-white rounded-xl shadow-md p-12 text-center">
+  <!-- Icono decorativo -->
+  <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+    <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+    </svg>
+  </div>
+
+  <!-- Mensaje -->
+  <h3 class="text-xl font-semibold text-gray-800 mb-2">No hay eventos aún</h3>
+  <p class="text-gray-500 mb-6">Esta boda no tiene eventos. Crea el primer evento para comenzar a planificar.</p>
+
+  <!-- Botón crear -->
+  <app-button
+    type="button"
+    theme="primary"
+    size="md"
+    [fullWidth]="false"
+    [onClickHandlers]="[onCreateEvent]"
+  >
+    <span class="flex items-center gap-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+      </svg>
+      Crear primer evento
+    </span>
+  </app-button>
+</section>

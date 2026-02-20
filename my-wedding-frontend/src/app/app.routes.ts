@@ -30,6 +30,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/weddings/weddings.router').then((m) => m.weddingsRoutes),
       },
+      {
+        path: 'events',
+        loadChildren: () =>
+          import('./features/events/events.routes').then((m) => m.eventsRoutes),
+      },
     ],
   },
 ];
