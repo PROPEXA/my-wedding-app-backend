@@ -75,7 +75,7 @@
         ></div>
           </div>
           <div class="sm:flex sm:items-end">
-        <app-button type="submit" theme="outline-primary" [disabled]="!selectedWeddingId()" [fullWidth]="true"
+        <app-button type="submit" theme="outline-primary" [disabled]="!selectedWeddingId()" [fullWidth]="true" (click)="loadWeddingStats()"
           >Consultar</app-button
         >
           </div>
@@ -86,7 +86,7 @@
       <!-- Usando only-child para que una sola tarjeta ocupe todo el ancho -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*:only-child]:lg:col-span-2">
         <!-- Estadísticas de Boda -->
-        <app-stats-card [stats]="weddingStats()" />
+        <app-stats-card [stats]="myWeddingStatistic()" type="wedding" />
 
         <!-- Estadísticas de Evento (ejemplo) -->
         <!-- <app-stats-card [stats]="eventStats()" /> -->

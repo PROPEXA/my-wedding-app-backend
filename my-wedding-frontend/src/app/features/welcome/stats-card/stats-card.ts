@@ -1,10 +1,19 @@
-import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { WeddingStats, EMPTY_STATS, StatsType } from '../stats.model';
-import { Wedding } from '../../weddings/wedding.model';
-import { WeddingService } from '../../../core/api/wedding.service';
-import { ServerException } from '../../../core/exception/server.exception';
-import { logger } from '../../../core/utils/log.util';
+import { Statistic } from '../../../core/model/statistic.mode';
+
+export const MOCK_STATISTIC: Statistic = {
+  wedding_id: 0,
+  event_id: 0,
+  invitations: 0,
+  confirmed: 0,
+  declined: 0,
+  waiting: 0,
+  people_confirmed: 0,
+  people_declined: 0,
+  people_waiting: 0,
+  updated_at: new Date(),
+};
 
 /**
  * Stats Card Component
@@ -38,7 +47,7 @@ export class StatsCard {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /** Datos de estadísticas */
-  stats = input<WeddingStats>(EMPTY_STATS);
+  stats = input<Statistic>(MOCK_STATISTIC);
 
   /** Mostrar título del card */
   showTitle = input<boolean>(true);
@@ -46,6 +55,8 @@ export class StatsCard {
   /** Título personalizado (opcional) */
   title = input<string>('');
 
+  /** Tipo de Estadística */
+  type = input<'wedding' | 'event'>('wedding');
 
   // ═══════════════════════════════════════════════════════════════════════════
   // COMPUTED
@@ -54,34 +65,38 @@ export class StatsCard {
   /** Título del card basado en el tipo */
   protected cardTitle = computed(() => {
     if (this.title()) return this.title();
-    const stats = this.stats();
-    if (stats.name) return stats.name;
-    return stats.type === 'wedding' ? 'Estadísticas de Boda' : 'Estadísticas de Evento';
+    return this.type() === 'wedding' ? 'Estadísticas de Boda' : 'Estadísticas de Evento';
   });
 
   /** Etiqueta del tipo */
   protected typeLabel = computed(() => {
-    return this.stats().type === 'wedding' ? 'Boda Completa' : 'Evento de Boda';
+    return this.type() === 'wedding' ? 'Boda Completa' : 'Evento de Boda';
   });
 
   /** Clase de color para el badge del tipo */
   protected typeBadgeClass = computed(() => {
-    return this.stats().type === 'wedding'
+    return this.type() === 'wedding'
       ? 'bg-rose-100 text-rose-700'
       : 'bg-purple-100 text-purple-700';
   });
 
   /** Porcentaje de confirmación de invitaciones */
   protected invitationConfirmRate = computed(() => {
-    const { sent, confirmed } = this.stats().invitations;
-    if (sent === 0) return 0;
-    return Math.round((confirmed / sent) * 100);
+    const { invitations, confirmed } = this.stats();
+    if (invitations === 0) return 0;
+    return Math.round((confirmed / invitations) * 100);
   });
 
   /** Porcentaje de confirmación de personas */
   protected guestConfirmRate = computed(() => {
-    const { invited, confirmed } = this.stats().guests;
-    if (invited === 0) return 0;
-    return Math.round((confirmed / invited) * 100);
+    const people_invited = this.peopleInvited();
+    if (people_invited === 0) return 0;
+    const people_confirmed = this.stats().people_confirmed;
+    return Math.round((people_confirmed / people_invited) * 100);
+  });
+
+  peopleInvited = computed(() => {
+    const { confirmed, declined, waiting } = this.stats();
+    return confirmed + declined + waiting;
   });
 }
