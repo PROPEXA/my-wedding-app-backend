@@ -7,7 +7,7 @@ import { WeddingService } from '../../../../core/api/wedding.service';
 import { Wedding, WeddingUtils } from '../../../weddings/components/wedding-card/wedding.model';
 import { Statistic } from '../../../../core/model/statistic.mode';
 import { logger } from '../../../../core/utils/log.util';
-
+import { StatisticService } from '../../../../core/api/statistic.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +20,7 @@ export class Dashboard implements OnInit {
   // SERVICES
   // ═══════════════════════════════════════════════════════════════════════════
   private weddingService = inject(WeddingService);
+  private statisticService = inject(StatisticService);
   private destroyRef = inject(DestroyRef);
   // ═══════════════════════════════════════════════════════════════════════════
   // SIGNALS
@@ -49,16 +50,21 @@ export class Dashboard implements OnInit {
     const subs = this.weddingService.getAllMyWeddings().subscribe({
       next: (weddings) => {
         this.myWeddings.set(weddings);
-        logger.debug('Weddings loaded for stats card:' + weddings.length);
+        logger.debug('Weddings loaded for statistic card:' + weddings.length);
       },
     });
     this.destroyRef.onDestroy(() => subs.unsubscribe());
   }
 
-  loadWeddingStats(){
-    logger.debug(`Cargando estadísticas para boda ID: ${this.selectedWeddingId()}`);
-
+  loadWeddingStats() {
+    const weddingId = this.selectedWeddingId();
+    logger.debug(`Loading wedding statistic with wedding id: ${weddingId}`);
+    const subs = this.statisticService.getWeddingStatisticByWeddingId(weddingId!).subscribe({
+      next: (sta) => this.myWeddingStatistic.set(sta),
+    });
   }
+
+
 
   /**
    * Establece el saludo según la hora del día
@@ -80,6 +86,6 @@ export class Dashboard implements OnInit {
   onWeddingSelected(value: string | number): void {
     const id = typeof value === 'string' ? parseInt(value, 10) : value;
     this.selectedWeddingId.set(id || null);
-    logger.debug(`Boda seleccionada: ${id}`);
+    logger.debug(`Selected wedding to load statistics: ${id}`);
   }
 }

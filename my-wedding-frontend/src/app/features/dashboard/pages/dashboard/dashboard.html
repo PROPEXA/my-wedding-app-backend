@@ -52,12 +52,12 @@
       <div class="mb-8">
         <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-        />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
           </svg>
           Resumen
         </h2>
@@ -65,31 +65,34 @@
         <!-- SELECCIÓN DE BODA -->
         <div class="flex flex-col sm:flex-row gap-4">
           <div class="flex-1">
-        <div
-          class="appDropdown w-full"
-          dropdownId="weddingSelector"
-          placeholder="Selecciona una boda"
-          label="Listado de Bodas"
-          [options]="weddingOptions()"
-          (selectionChange)="onWeddingSelected($event)"
-        ></div>
+            <div
+              class="appDropdown w-full"
+              dropdownId="weddingSelector"
+              placeholder="Selecciona una boda"
+              label="Listado de Bodas"
+              [options]="weddingOptions()"
+              (selectionChange)="onWeddingSelected($event)"
+            ></div>
           </div>
           <div class="sm:flex sm:items-end">
-        <app-button type="submit" theme="outline-primary" [disabled]="!selectedWeddingId()" [fullWidth]="true" (click)="loadWeddingStats()"
-          >Consultar</app-button
-        >
+            <app-button
+              type="submit"
+              theme="outline-primary"
+              [disabled]="!selectedWeddingId()"
+              [fullWidth]="true"
+              (click)="loadWeddingStats()"
+              >Consultar</app-button
+            >
           </div>
         </div>
       </div>
 
       <!-- TARJETAS DE ESTADÍSTICAS -->
-      <!-- Usando only-child para que una sola tarjeta ocupe todo el ancho -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*:only-child]:lg:col-span-2">
-        <!-- Estadísticas de Boda -->
-        <app-stats-card [stats]="myWeddingStatistic()" type="wedding" />
-
-        <!-- Estadísticas de Evento (ejemplo) -->
-        <!-- <app-stats-card [stats]="eventStats()" /> -->
+        <app-stats-card
+          [stats]="myWeddingStatistic()"
+          type="wedding"
+        />
       </div>
     </section>
 
