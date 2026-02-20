@@ -49,40 +49,45 @@
          SECCIÓN: ESTADÍSTICAS RÁPIDAS
          ═══════════════════════════════════════════════════════════════════ -->
     <section class="mb-8">
-      <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-        <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-        Resumen
-      </h2>
+      <div class="mb-8">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+        />
+          </svg>
+          Resumen
+        </h2>
 
-      <!-- SELECCIÓN DE BODA -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <!-- SELECCIÓN DE BODA -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <div class="flex-1">
         <div
-          class="flex col-start-1 col-end-5 lg:col-start-2 lg:col-end-5 justify-between items-end-safe gap-4"
+          class="appDropdown w-full"
+          dropdownId="language"
+          placeholder="Selecciona una boda"
+          label="Listado de Bodas"
+        ></div>
+          </div>
+          <div class="sm:flex sm:items-end">
+        <app-button type="submit" theme="outline-primary" [disabled]="false" [fullWidth]="true"
+          >Consultar</app-button
         >
-          <div
-            class="appDropdown col-start-1 col-end-3 lg:col-start-1 lg:col-end-4 w-full"
-            dropdownId="language"
-            placeholder="Selecciona una boda"
-            label="Listado de Bodas"
-          ></div>
-          <app-button type="submit" theme="primary" [disabled]="false" [fullWidth]="false"
-            >Consultar</app-button
-          >
+          </div>
         </div>
       </div>
-      <!-- ESTADÍSTICAS -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <app-card-info icon="heart" label="Bodas Activas" value="2" />
-        <app-card-info icon="email" label="Invitaciones Enviadas" value="45" />
-        <app-card-info icon="success" label="Confirmaciones" value="32" />
-        <app-card-info icon="calendar" label="Días para el Evento" value="120" />
+
+      <!-- TARJETAS DE ESTADÍSTICAS -->
+      <!-- Usando only-child para que una sola tarjeta ocupe todo el ancho -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*:only-child]:lg:col-span-2">
+        <!-- Estadísticas de Boda -->
+        <app-stats-card [stats]="weddingStats()" />
+
+        <!-- Estadísticas de Evento (ejemplo) -->
+        <!-- <app-stats-card [stats]="eventStats()" /> -->
       </div>
     </section>
 
@@ -107,7 +112,7 @@
           title="Nueva Boda"
           description="Crea un nuevo evento de boda"
           icon="plus"
-          route="/dashboard/weddings"
+          route="/dashboard/weddings/new"
         />
         <app-card-action
           title="Mis Bodas"
