@@ -15,7 +15,7 @@
   </div>
 } @else {
   <!-- CARD FORMULARIO -->
-  <app-form-container>
+  <app-form-container size="4xl">
     <!-- HEADER -->
     <app-form-header [title]="formTitle()" [subtitle]="formSubtitle()" />
 
@@ -39,28 +39,32 @@
         }
 
         <!-- ═══════════════════════════════════════════════════════════════════
-             SECCIÓN: DATOS DE LA NOVIA
+             GRID DE 2 COLUMNAS PARA DESKTOP
              ═══════════════════════════════════════════════════════════════════ -->
-        <section class="space-y-4">
-          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <svg
-              class="w-5 h-5 text-rose-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-            Datos de la Novia
-          </h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
 
-          <!-- NOMBRE Y APELLIDO -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- ═══════════════════════════════════════════════════════════════════
+               SECCIÓN: DATOS DE LA NOVIA
+               ═══════════════════════════════════════════════════════════════════ -->
+          <section class="space-y-4">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg
+                class="w-5 h-5 text-rose-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              Datos de la Novia
+            </h2>
+
+            <!-- NOMBRE -->
             <div
               class="appInput"
               [formControl]="form.controls.bride_firstname"
@@ -72,6 +76,7 @@
               [errorMessage]="getBrideFirstNameError()"
             ></div>
 
+            <!-- APELLIDO -->
             <div
               class="appInput"
               [formControl]="form.controls.bride_lastname"
@@ -82,10 +87,8 @@
               label="Apellidos"
               [errorMessage]="getBrideLastNameError()"
             ></div>
-          </div>
 
-          <!-- EMAIL Y TELÉFONO -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- EMAIL -->
             <div
               class="appInput"
               [formControl]="form.controls.bride_email"
@@ -97,6 +100,7 @@
               [errorMessage]="getBrideEmailError()"
             ></div>
 
+            <!-- TELÉFONO -->
             <div
               class="appInput"
               [formControl]="form.controls.bride_phone"
@@ -107,47 +111,42 @@
               label="Teléfono"
               [errorMessage]="getBridePhoneError()"
             ></div>
-          </div>
 
-          <!-- FECHA DE NACIMIENTO -->
-          <div
-            class="appDatepicker"
-            [formControl]="form.controls.bride_birthdate"
-            datepickerId="bride_birthdate"
-            [required]="true"
-            placeholder="Selecciona la fecha de nacimiento"
-            label="Fecha de Nacimiento"
-            [maxDate]="maxBirthDate"
-            [errorMessage]="getBrideBirthDateError()"
-          ></div>
-        </section>
+            <!-- FECHA DE NACIMIENTO -->
+            <div
+              class="appDatepicker"
+              [formControl]="form.controls.bride_birthdate"
+              datepickerId="bride_birthdate"
+              [required]="true"
+              placeholder="Selecciona la fecha de nacimiento"
+              label="Fecha de Nacimiento"
+              [maxDate]="maxBirthDate"
+              [errorMessage]="getBrideBirthDateError()"
+            ></div>
+          </section>
 
-        <!-- DIVIDER -->
-        <div class="border-t border-rose-100"></div>
+          <!-- ═══════════════════════════════════════════════════════════════════
+               SECCIÓN: DATOS DEL NOVIO
+               ═══════════════════════════════════════════════════════════════════ -->
+          <section class="space-y-4">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg
+                class="w-5 h-5 text-rose-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              Datos del Novio
+            </h2>
 
-        <!-- ═══════════════════════════════════════════════════════════════════
-             SECCIÓN: DATOS DEL NOVIO
-             ═══════════════════════════════════════════════════════════════════ -->
-        <section class="space-y-4">
-          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <svg
-              class="w-5 h-5 text-rose-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-            Datos del Novio
-          </h2>
-
-          <!-- NOMBRE Y APELLIDO -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- NOMBRE -->
             <div
               class="appInput"
               [formControl]="form.controls.groom_firstname"
@@ -159,6 +158,7 @@
               [errorMessage]="getGroomFirstNameError()"
             ></div>
 
+            <!-- APELLIDO -->
             <div
               class="appInput"
               [formControl]="form.controls.groom_lastname"
@@ -169,10 +169,8 @@
               label="Apellidos"
               [errorMessage]="getGroomLastNameError()"
             ></div>
-          </div>
 
-          <!-- EMAIL Y TELÉFONO -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- EMAIL -->
             <div
               class="appInput"
               [formControl]="form.controls.groom_email"
@@ -184,6 +182,7 @@
               [errorMessage]="getGroomEmailError()"
             ></div>
 
+            <!-- TELÉFONO -->
             <div
               class="appInput"
               [formControl]="form.controls.groom_phone"
@@ -194,23 +193,21 @@
               label="Teléfono"
               [errorMessage]="getGroomPhoneError()"
             ></div>
-          </div>
 
-          <!-- FECHA DE NACIMIENTO -->
-          <div
-            class="appDatepicker"
-            [formControl]="form.controls.groom_birthdate"
-            datepickerId="groom_birthdate"
-            [required]="true"
-            placeholder="Selecciona la fecha de nacimiento"
-            label="Fecha de Nacimiento"
-            [maxDate]="maxBirthDate"
-            [errorMessage]="getGroomBirthDateError()"
-          ></div>
-        </section>
+            <!-- FECHA DE NACIMIENTO -->
+            <div
+              class="appDatepicker"
+              [formControl]="form.controls.groom_birthdate"
+              datepickerId="groom_birthdate"
+              [required]="true"
+              placeholder="Selecciona la fecha de nacimiento"
+              label="Fecha de Nacimiento"
+              [maxDate]="maxBirthDate"
+              [errorMessage]="getGroomBirthDateError()"
+            ></div>
+          </section>
 
-        <!-- DIVIDER -->
-        <div class="border-t border-rose-100"></div>
+        </div>
 
         <!-- ═══════════════════════════════════════════════════════════════════
              BOTONES DE ACCIÓN

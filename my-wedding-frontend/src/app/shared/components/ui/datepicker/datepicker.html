@@ -1,4 +1,4 @@
-<div class="w-full relative datepicker-container">
+<div class="w-full relative datepicker-container z-10]">
   @if (label()) {
     <label
       [attr.for]="datepickerId()"
@@ -12,7 +12,7 @@
   }
 
   <!-- Input con botón de calendario -->
-  <div class="relative">
+  <div class="relative z-20">
     <input
       [id]="datepickerId()"
       type="text"
