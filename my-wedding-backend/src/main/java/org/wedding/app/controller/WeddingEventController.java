@@ -50,7 +50,7 @@ public class WeddingEventController {
     @GetMapping("/{id}")
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get wedding event by id")
-    public ResponseEntity<EventDto> getWeddingEventById(int id) {
+    public ResponseEntity<EventDto> getWeddingEventById(@PathVariable int id) {
         return ResponseEntity.ok(weddingEventService.obtainEventById(id));
     }
 
