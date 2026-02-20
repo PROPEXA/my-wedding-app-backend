@@ -4,12 +4,11 @@ import { Footer } from "../../shared/components/layout/footer/footer";
 import { Header, NavItem } from '../../shared/components/layout/header/header';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-web-container',
   imports: [Header, RouterOutlet, Footer],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  templateUrl: './web-container.html',
 })
-export class Dashboard {
+export class WebContainer {
   onLogout() {}
 
   onNavigate(navItem: NavItem) {

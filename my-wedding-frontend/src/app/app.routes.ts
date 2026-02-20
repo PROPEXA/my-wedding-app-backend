@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'app',
+    path: '',
     loadComponent: () => import('./layouts/public/public').then((m) => m.Public),
     children: [
       {
@@ -28,7 +28,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./layouts/dashboard/dashboard').then((m) => m.Dashboard),
+    loadComponent: () => import('./layouts/web-container/web-container').then((m) => m.WebContainer),
     children: [
       {
         path: '',
