@@ -11,16 +11,18 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        loadComponent: () => import('./features/accounts/login/login').then((m) => m.Login),
+        loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
       },
       {
         path: 'signup',
-        loadComponent: () => import('./features/accounts/signup/signup').then((m) => m.Signup),
+        loadComponent: () => import('./features/auth/pages/signup/signup').then((m) => m.Signup),
       },
       {
         path: 'confirm/:token',
         loadComponent: () =>
-          import('./features/accounts/confirm-account/confirm-account').then((m) => m.ConfirmAccount),
+          import('./features/auth/pages/confirm-account/confirm-account').then(
+            (m) => m.ConfirmAccount,
+          ),
       },
     ],
   },
@@ -30,21 +32,22 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/welcome/welcome').then((m) => m.Welcome),
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'weddings',
-        loadComponent: () => import('./layouts/weddings/weddings').then((m) => m.Weddings),
+        loadComponent: () => import('./features/weddings/pages/wedding/weddings').then((m) => m.Weddings),
       },
       {
         path: 'weddings/new',
         loadComponent: () =>
-          import('./layouts/weddings/wedding-new/wedding-new').then((m) => m.WeddingNew),
+          import('./features/weddings/pages/wedding-new/wedding-new').then((m) => m.WeddingNew),
       },
       {
         path: 'weddings/:id/edit',
         loadComponent: () =>
-          import('./layouts/weddings/wedding-edit/wedding-edit').then((m) => m.WeddingEdit),
+          import('./features/weddings/pages/wedding-edit/wedding-edit').then((m) => m.WeddingEdit),
       },
     ],
   },

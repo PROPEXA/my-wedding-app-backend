@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header, NavItem } from '../../features/header/header';
-import { Footer } from "../../features/footer/footer";
+import { Footer } from "../../shared/components/layout/footer/footer";
+import { Header, NavItem } from '../../shared/components/layout/header/header';
 
 @Component({
   selector: 'app-dashboard',
