@@ -1,10 +1,14 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CardInfo } from '../../components/card-info/card-info';
 import { CardAction } from '../../components/card-action/card-action';
-import { Dropdown } from '../../components/dropdown/dropdown';
+import { Dropdown, DropdownOption } from '../../components/dropdown/dropdown';
 import { Button } from '../../components/button/button';
 import { StatsCard } from './stats-card/stats-card';
 import { WeddingStats, EMPTY_STATS } from './stats.model';
+import { WeddingService } from '../../core/api/wedding.service';
+import { Wedding, WeddingUtils } from '../weddings/wedding.model';
+import { logger } from '../../core/utils/log.util';
+import { ServerException } from '../../core/exception/server.exception';
 
 @Component({
   selector: 'app-welcome',
@@ -13,6 +17,28 @@ import { WeddingStats, EMPTY_STATS } from './stats.model';
   styleUrl: './welcome.css',
 })
 export class Welcome implements OnInit {
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SERVICES
+  // ═══════════════════════════════════════════════════════════════════════════
+  private weddingService = inject(WeddingService);
+  private destroyRef = inject(DestroyRef);
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SIGNALS
+  // ═══════════════════════════════════════════════════════════════════════════
+  myWeddings = signal<Wedding[]>([]);
+  error = signal<string>('');
+
+  /** Boda seleccionada en el dropdown */
+  protected selectedWeddingId = signal<number | null>(null);
+
+  /** Opciones para el dropdown de bodas */
+  protected weddingOptions = computed<DropdownOption[]>(() => {
+    return this.myWeddings().map((wedding) => ({
+      value: wedding.id ?? 0,
+      label: WeddingUtils.getCoupleName(wedding),
+    }));
+  });
+
   /** Nombre del usuario (se obtendría del servicio de autenticación) */
   protected userName = signal<string>('Usuario');
 
@@ -60,6 +86,20 @@ export class Welcome implements OnInit {
 
   ngOnInit(): void {
     this.setGreeting();
+    const subs = this.weddingService.getAllMyWeddings().subscribe({
+      next: (weddings) => {
+        this.myWeddings.set(weddings);
+        logger.debug('Weddings loaded for stats card:' + weddings.length);
+      },
+      error: (err) => {
+        if (err instanceof ServerException) {
+          this.error.set(err.message);
+        } else {
+          this.error.set('Ocurrió un error inesperado al cargar las bodas.');
+        }
+      },
+    });
+    this.destroyRef.onDestroy(() => subs.unsubscribe());
   }
 
   /**
@@ -74,5 +114,14 @@ export class Welcome implements OnInit {
     } else {
       this.greeting.set('Buenas noches');
     }
+  }
+
+  /**
+   * Maneja la selección de una boda en el dropdown
+   */
+  onWeddingSelected(value: string | number): void {
+    const id = typeof value === 'string' ? parseInt(value, 10) : value;
+    this.selectedWeddingId.set(id || null);
+    logger.debug(`Boda seleccionada: ${id}`);
   }
 }

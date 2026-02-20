@@ -1,6 +1,10 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { WeddingStats, EMPTY_STATS, StatsType } from '../stats.model';
+import { Wedding } from '../../weddings/wedding.model';
+import { WeddingService } from '../../../core/api/wedding.service';
+import { ServerException } from '../../../core/exception/server.exception';
+import { logger } from '../../../core/utils/log.util';
 
 /**
  * Stats Card Component
@@ -41,6 +45,7 @@ export class StatsCard {
 
   /** Título personalizado (opcional) */
   title = input<string>('');
+
 
   // ═══════════════════════════════════════════════════════════════════════════
   // COMPUTED

@@ -8,6 +8,7 @@ import { API } from '../env/env.dev';
  * - error: Logs a message with a red cross and bold font.
  * - warning: Logs a message with an orange warning sign and bold font.
  * - info: Logs a message with a blue information sign and bold font.
+ * - debug: Logs a message with a purple debug sign and bold font.
  * Each method takes a string message as an argument and formats it accordingly before logging it to the console.
  */
 export const logger = {
@@ -32,6 +33,12 @@ export const logger = {
   info: (msg: string) => {
     if (API.showLog) {
       console.log('%c[INFO] ' + msg, 'color: #2196f3; font-weight: bold;');
+    }
+  },
+
+  debug: (msg: string) => {
+    if (API.showLog) {
+      console.log('%c[DEBUG] ' + msg, 'color: #9c27b0; font-weight: bold;');
     }
   },
 };

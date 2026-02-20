@@ -1,6 +1,8 @@
 package org.wedding.app.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ public class WeddingServiceImpl implements WeddingService {
     }
 
     @Override
+    @Cacheable(value = "wedding", key = "#id")
     public WeddingDto obtainWeddingById(Integer id) {
         int accountId = getAccountId();
         TblWedding tblAccount = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(id, accountId, "A")
@@ -37,6 +40,7 @@ public class WeddingServiceImpl implements WeddingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "wedding", key = "#id")
     public void deleteWeddingById(Integer id) {
         int accountId = getAccountId();
         tblWeddingRepository.findByIdAndWedAccountAndWedStatus(id, accountId, "A")
@@ -48,6 +52,7 @@ public class WeddingServiceImpl implements WeddingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "wedding", key = "#weddingDto.id()")
     public void updateWedding(WeddingDto weddingDto) {
         final int accountId = getAccountId();
         final TblWedding persisted = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(weddingDto.id(), accountId, "A")

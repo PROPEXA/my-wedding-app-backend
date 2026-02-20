@@ -67,13 +67,15 @@
           <div class="flex-1">
         <div
           class="appDropdown w-full"
-          dropdownId="language"
+          dropdownId="weddingSelector"
           placeholder="Selecciona una boda"
           label="Listado de Bodas"
+          [options]="weddingOptions()"
+          (selectionChange)="onWeddingSelected($event)"
         ></div>
           </div>
           <div class="sm:flex sm:items-end">
-        <app-button type="submit" theme="outline-primary" [disabled]="false" [fullWidth]="true"
+        <app-button type="submit" theme="outline-primary" [disabled]="!selectedWeddingId()" [fullWidth]="true"
           >Consultar</app-button
         >
           </div>
