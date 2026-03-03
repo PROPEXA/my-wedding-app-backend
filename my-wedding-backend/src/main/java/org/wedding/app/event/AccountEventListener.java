@@ -55,7 +55,7 @@ public class AccountEventListener {
         Context context = new Context();
         context.setVariable("fullName", getFullName(tblAccount));
         context.setVariable("confirmationCode", confirmationConde);
-        context.setVariable("fullUrl", "http://localhost:4200/app/confirm/" + uuid);
+        context.setVariable("fullUrl", "http://localhost:4200/auth/confirm/" + uuid);
         String htmlContent = templateEngine.process("layout_email_confirm_account", context);
         emailNotification.sendEmailAsync(tblAccount.getAccEmail(), "Confirma tu cuenta", htmlContent)
                 .join();

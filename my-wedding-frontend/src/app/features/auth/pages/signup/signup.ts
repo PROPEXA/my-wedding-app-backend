@@ -236,7 +236,7 @@ export class Signup implements OnInit {
         this.isLoading.set(false);
         this.alertService.success('¡Registro exitoso!', response.message).then(() => {
           // Redirigir al login después de cerrar la alerta
-          this.router.navigate(['/app/login']);
+          this.router.navigate(['/auth/login']);
         });
       },
       error: (error) => {
