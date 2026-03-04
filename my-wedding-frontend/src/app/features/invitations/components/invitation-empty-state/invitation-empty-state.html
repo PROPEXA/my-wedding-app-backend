@@ -1,0 +1,41 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     EMPTY STATE - Estado vacío cuando no hay invitaciones
+     ═══════════════════════════════════════════════════════════════════ -->
+<section class="bg-white rounded-xl shadow-md p-12 text-center">
+  @if (!hasEventSelected()) {
+    <!-- Estado: No hay evento seleccionado -->
+    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+    </div>
+
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">Selecciona un evento</h3>
+    <p class="text-gray-500">Selecciona una boda y un evento para ver y gestionar las invitaciones</p>
+  } @else {
+    <!-- Estado: No hay invitaciones -->
+    <div class="w-24 h-24 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-12 h-12 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+    </div>
+
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">No hay invitaciones aún</h3>
+    <p class="text-gray-500 mb-6">Comienza creando tu primera invitación para este evento</p>
+
+    <app-button
+      type="button"
+      theme="primary"
+      size="md"
+      [fullWidth]="false"
+      [onClickHandlers]="[onCreateInvitation]"
+    >
+      <span class="flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Crear primera invitación
+      </span>
+    </app-button>
+  }
+</section>

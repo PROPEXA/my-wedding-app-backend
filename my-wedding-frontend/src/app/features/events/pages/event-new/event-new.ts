@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EventForm } from '../../componentes/event-form/event-form';
+import { EventForm } from '../../components/event-form/event-form';
 
 /**
  * Event New Page

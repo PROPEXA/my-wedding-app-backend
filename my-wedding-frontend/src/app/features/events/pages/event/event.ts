@@ -9,7 +9,7 @@ import { EventActionEvent } from '../../components/event-card/event.model';
 import { WeddingEvent } from '../../../../core/model/wedding-event.model';
 import { Wedding } from '../../../../core/model/wedding.model';
 import { WeddingService } from '../../../../core/api/wedding.service';
-import { WeddingEventService } from '../../../../core/api/wedding-event.service';
+import { EventService } from '../../../../core/api/event.service';
 import { ServerException } from '../../../../core/exception/server.exception';
 import { logger } from '../../../../core/utils/log.util';
 
@@ -23,7 +23,7 @@ export class Event implements OnInit {
   private router = inject(Router);
   private alertService = inject(AlertService);
   private weddingService = inject(WeddingService);
-  private weddingEventService = inject(WeddingEventService);
+  private eventService = inject(EventService);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // STATE
@@ -110,7 +110,7 @@ export class Event implements OnInit {
    */
   private loadEvents(weddingId: number): void {
     this.isLoadingEvents.set(true);
-    this.weddingEventService.getAllWeddingEventsByWeddingId(weddingId).subscribe({
+    this.eventService.getAllWeddingEventsByWeddingId(weddingId).subscribe({
       next: (events) => {
         this.events.set(events);
         this.isLoadingEvents.set(false);
@@ -159,7 +159,7 @@ export class Event implements OnInit {
     );
 
     if (result.confirmed && event.id) {
-      this.weddingEventService.deleteWeddingEventById(event.id).subscribe({
+      this.eventService.deleteWeddingEventById(event.id).subscribe({
         next: (response) => {
           this.events.update((events) => events.filter((e) => e.id !== event.id));
           this.alertService.success('Evento Eliminado', response.message);

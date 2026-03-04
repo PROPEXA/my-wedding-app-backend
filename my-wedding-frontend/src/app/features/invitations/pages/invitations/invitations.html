@@ -1,0 +1,135 @@
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     INVITATIONS PANEL - Panel de control de invitaciones
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<div class="min-h-screen bg-linear-to-br from-teal-50 via-cyan-50 to-emerald-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN: HEADER DEL PANEL
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="mb-8">
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-linear-to-r from-teal-400 to-cyan-500 px-6 py-6 sm:px-8 sm:py-8">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <!-- Título -->
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-white">Mis Invitaciones</h1>
+                <p class="text-teal-100 text-sm">Gestiona las invitaciones de tus eventos</p>
+              </div>
+            </div>
+
+            <!-- Botón Nueva Invitación -->
+            <app-button
+              type="button"
+              theme="light"
+              size="md"
+              [fullWidth]="false"
+              [disabled]="!hasWeddingSelected()"
+              [onClickHandlers]="[onCreateInvitation]"
+            >
+              <span class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Nueva Invitación
+              </span>
+            </app-button>
+          </div>
+        </div>
+
+        <!-- Barra decorativa -->
+        <div class="h-1 bg-linear-to-r from-teal-300 via-cyan-400 to-emerald-400"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN: SELECTORES DE BODA Y EVENTO
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="mb-6">
+      <div class="bg-white rounded-xl shadow-md p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dropdown de selección de boda -->
+          <div class="flex-1">
+            <div
+              class="appDropdown"
+              [formControl]="weddingControl"
+              dropdownId="wedding-selector"
+              [options]="weddingOptions()"
+              placeholder="Selecciona una boda..."
+              label="Boda"
+            ></div>
+          </div>
+
+          <!-- Dropdown de selección de evento -->
+          <div class="flex-1">
+            <div
+              class="appDropdown"
+              [formControl]="eventControl"
+              dropdownId="event-selector"
+              [options]="eventOptions()"
+              [disabled]="!hasWeddingSelected()"
+              placeholder="Selecciona un evento..."
+              label="Evento"
+            ></div>
+          </div>
+
+          <!-- Contador de invitaciones -->
+          <div class="flex items-end">
+            <div class="flex items-center gap-2 px-4 py-3 bg-teal-50 rounded-lg w-full justify-center md:w-auto">
+              <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span class="text-teal-700 font-semibold">{{ invitations().length }} invitaciones</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN: ESTADÍSTICAS DEL EVENTO
+         ═══════════════════════════════════════════════════════════════════ -->
+    @if (hasEventSelected()) {
+      <section class="mb-6">
+        @if (isLoadingStats()) {
+          <!-- Skeleton de estadísticas -->
+          <div class="bg-white rounded-2xl shadow-lg p-6 animate-pulse">
+            <div class="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              @for (i of [1, 2, 3, 4]; track i) {
+                <div class="bg-gray-100 rounded-xl p-4 h-20"></div>
+              }
+            </div>
+          </div>
+        } @else if (eventStatistics()) {
+          <app-stats-card
+            [stats]="eventStatistics()!"
+            [showTitle]="true"
+            title="Estadísticas del Evento"
+            type="event"
+          />
+        }
+      </section>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         SECCIÓN: LISTADO DE INVITACIONES (Componente)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <app-invitation-list
+      [invitations]="invitations()"
+      [isLoading]="isLoadingInvitations()"
+      [hasEventSelected]="hasEventSelected()"
+      [hasMorePages]="hasMorePages()"
+      (action)="handleAction($event)"
+      (createInvitation)="onCreateInvitation()"
+      (loadMore)="onLoadMore()"
+    />
+
+  </div>
+</div>

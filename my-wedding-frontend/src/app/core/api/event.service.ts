@@ -9,7 +9,7 @@ import { ServerException } from '../exception/server.exception';
 @Injectable({
   providedIn: 'root',
 })
-export class WeddingEventService {
+export class EventService {
   private httpClient = inject(HttpClient);
 
   /**

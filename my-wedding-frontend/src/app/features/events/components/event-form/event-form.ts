@@ -9,7 +9,7 @@ import { Dropdown, DropdownOption } from '../../../../shared/components/ui/dropd
 import { FormHeader } from '../../../../shared/components/layout/form-header/form-header';
 import { FormContainer } from '../../../../shared/components/layout/form-container/form-container';
 import { LocationPicker, LocationCoordinates } from '../../../../shared/components/ui/location-picker/location-picker';
-import { WeddingEventService } from '../../../../core/api/wedding-event.service';
+import { EventService } from '../../../../core/api/event.service';
 import { WeddingEventTypeService } from '../../../../core/api/event-type.service';
 import { AlertService } from '../../../../shared/components/ui/alert/alert.service';
 import { WeddingEvent } from '../../../../core/model/wedding-event.model';
@@ -75,7 +75,7 @@ export interface EventFormData {
 })
 export class EventForm implements OnInit {
   private destroyRef = inject(DestroyRef);
-  private weddingEventService = inject(WeddingEventService);
+  private eventService = inject(EventService);
   private eventTypeService = inject(WeddingEventTypeService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -254,7 +254,7 @@ export class EventForm implements OnInit {
    */
   private loadEvent(id: number): void {
     this.isLoadingData.set(true);
-    const sub = this.weddingEventService.getWeddingEventById(id).subscribe({
+    const sub = this.eventService.getWeddingEventById(id).subscribe({
       next: (event) => {
         this.currentEvent.set(event);
         this.populateForm(event);
@@ -385,8 +385,8 @@ export class EventForm implements OnInit {
     const event = this.buildEventFromForm();
     const operation$ =
       this.mode() === 'create'
-        ? this.weddingEventService.postNewWeddingEvent(event)
-        : this.weddingEventService.putExistingWeddingEvent(event);
+        ? this.eventService.postNewWeddingEvent(event)
+        : this.eventService.putExistingWeddingEvent(event);
 
     const sub = operation$.subscribe({
       next: (response) => {

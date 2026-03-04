@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   INVITATIONS COMPONENT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Animación para el menú desplegable */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Transiciones suaves para las tarjetas */
+article {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+article:hover {
+  transform: translateY(-4px);
+}
+
+/* Estilo para el campo de búsqueda */
+input:focus {
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Animación de la barra de progreso */
+.progress-bar {
+  transition: width 0.5s ease-out;
+}

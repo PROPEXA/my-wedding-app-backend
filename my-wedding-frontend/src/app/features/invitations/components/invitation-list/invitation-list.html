@@ -1,0 +1,85 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     INVITATION LIST - Lista de invitaciones con carga y estado vacío
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- Estado de carga inicial -->
+@if (isLoading() && invitations().length === 0) {
+  <section class="flex justify-center items-center py-20">
+    <div class="text-center">
+      <svg class="animate-spin h-12 w-12 text-teal-500 mx-auto mb-4" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+      </svg>
+      <p class="text-gray-500">Cargando invitaciones...</p>
+    </div>
+  </section>
+}
+
+<!-- Contenido principal -->
+@if (!isLoading() || invitations().length > 0) {
+  @if (!hasEventSelected() || invitations().length === 0) {
+    <!-- Estado vacío -->
+    <app-invitation-empty-state
+      [hasEventSelected]="hasEventSelected()"
+      (createInvitation)="onCreateInvitation()"
+    />
+  } @else {
+    <!-- Grid de invitaciones -->
+    <section class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (invitation of invitations(); track invitation.id ?? $index) {
+          <app-invitation-card
+            [invitation]="invitation"
+            [isMenuOpen]="invitation.id !== undefined && isMenuOpen(invitation.id)"
+            (action)="onCardAction($event)"
+            (menuToggle)="toggleMenu($event)"
+          />
+        }
+      </div>
+
+      <!-- Botón de cargar más con paginación -->
+      @if (hasMorePages()) {
+        <div class="flex justify-center pt-4">
+          <app-button
+            type="button"
+            theme="secondary"
+            size="md"
+            [fullWidth]="false"
+            [disabled]="isLoading()"
+            [onClickHandlers]="[onLoadMore]"
+          >
+            @if (isLoading()) {
+              <span class="flex items-center gap-2">
+                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                </svg>
+                Cargando...
+              </span>
+            } @else {
+              <span class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+                Cargar más invitaciones
+              </span>
+            }
+          </app-button>
+        </div>
+      } @else if (invitations().length > 0) {
+        <!-- Mensaje de fin de lista -->
+        <div class="text-center py-4">
+          <p class="text-gray-400 text-sm">— Has visto todas las invitaciones —</p>
+        </div>
+      }
+    </section>
+  }
+}
+
+<!-- Overlay para cerrar menú -->
+@if (openMenuId() !== null) {
+  <div
+    class="fixed inset-0 z-0"
+    (click)="closeMenu()"
+  ></div>
+}

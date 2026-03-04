@@ -35,6 +35,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/events/events.routes').then((m) => m.eventsRoutes),
       },
+      {
+        path: 'invitations',
+        loadChildren: () =>
+          import('./features/invitations/invitations.routes').then((m) => m.invitationsRoutes),
+      },
     ],
   },
 ];
