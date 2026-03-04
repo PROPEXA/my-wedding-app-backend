@@ -6,4 +6,9 @@ export const invitationsRoutes: Routes = [
     loadComponent: () =>
       import('./pages/invitations/invitations').then((m) => m.Invitations),
   },
+  {
+    path: 'new',
+    loadComponent: () =>
+      import('./pages/invitation-new/invitation-new').then((m) => m.InvitationNew),
+  },
 ];

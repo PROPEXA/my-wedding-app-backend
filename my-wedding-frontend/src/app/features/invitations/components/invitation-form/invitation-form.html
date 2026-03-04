@@ -1,0 +1,427 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     INVITATION FORM - Formulario para crear/editar invitaciones
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- Estado de carga inicial -->
+@if (isLoadingData()) {
+  <div class="flex justify-center items-center py-20">
+    <div class="text-center">
+      <svg class="animate-spin h-12 w-12 text-teal-500 mx-auto mb-4" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+      </svg>
+      <p class="text-gray-500">Cargando información...</p>
+    </div>
+  </div>
+} @else {
+  <!-- CARD FORMULARIO -->
+  <app-form-container size="4xl">
+    <!-- HEADER -->
+    <app-form-header [title]="formTitle()" [subtitle]="formSubtitle()" />
+
+    <!-- FORMULARIO -->
+    <div class="p-5 sm:p-8">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- ERROR DEL SERVIDOR -->
+        @if (serverError()) {
+          <div
+            class="bg-red-50 border border-red-200 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm flex items-center gap-2"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>{{ serverError() }}</span>
+          </div>
+        }
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             SECCIÓN: INFORMACIÓN BÁSICA
+             ═══════════════════════════════════════════════════════════════════ -->
+        <section class="space-y-4">
+          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Información de la Invitación
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- TÍTULO -->
+            <div
+              class="appInput"
+              [formControl]="form.controls.title"
+              inputId="invitation_title"
+              type="text"
+              [required]="true"
+              placeholder="Ej: Familia García López"
+              label="Título de la Invitación"
+              [errorMessage]="getTitleError()"
+            ></div>
+
+            <!-- CANTIDAD DE INVITADOS -->
+            <div
+              class="appInput"
+              [formControl]="form.controls.quantity"
+              inputId="invitation_quantity"
+              type="number"
+              [required]="true"
+              placeholder="Ej: 4"
+              label="Cantidad de Invitados"
+              [errorMessage]="getQuantityError()"
+            ></div>
+
+            <!-- TIPO DE RELACIÓN -->
+            <div
+              class="appDropdown"
+              [formControl]="form.controls.relation_id"
+              dropdownId="relation_type"
+              [options]="relationOptions()"
+              [required]="true"
+              placeholder="Selecciona la relación..."
+              label="Relación con los Novios"
+              [errorMessage]="getRelationError()"
+            ></div>
+
+            <!-- NÚMERO DE MESA -->
+            <div
+              class="appInput"
+              [formControl]="form.controls.table_number"
+              inputId="table_number"
+              type="text"
+              placeholder="Ej: Mesa 5, VIP..."
+              label="Número de Mesa (opcional)"
+              [errorMessage]="getTableNumberError()"
+            ></div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             SECCIÓN: EVENTOS
+             ═══════════════════════════════════════════════════════════════════ -->
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              Eventos de la Boda
+              <span class="text-red-500">*</span>
+            </h2>
+            <div class="flex gap-2">
+              <button
+                type="button"
+                (click)="selectAllEvents()"
+                class="text-xs text-teal-600 hover:text-teal-800 underline"
+              >
+                Seleccionar todos
+              </button>
+              <button
+                type="button"
+                (click)="deselectAllEvents()"
+                class="text-xs text-gray-500 hover:text-gray-700 underline"
+              >
+                Deseleccionar
+              </button>
+            </div>
+          </div>
+
+          @if (isLoadingEvents()) {
+            <div class="flex items-center justify-center py-8">
+              <svg class="animate-spin h-6 w-6 text-teal-500" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+              <span class="ml-2 text-gray-500">Cargando eventos...</span>
+            </div>
+          } @else if (events().length === 0) {
+            <div class="text-center py-8 bg-gray-50 rounded-lg">
+              <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <p class="text-gray-500">No hay eventos disponibles para esta boda</p>
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              @for (event of events(); track event.id) {
+                <label
+                  class="event-checkbox-card"
+                  [class.selected]="isEventSelected(event.id!)"
+                  (click)="toggleEventSelection(event.id!)"
+                >
+                  <div class="flex items-start gap-3">
+                    <!-- Checkbox visual -->
+                    <div class="checkbox-indicator">
+                      @if (isEventSelected(event.id!)) {
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                      }
+                    </div>
+                    <!-- Info del evento -->
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium text-gray-800 truncate">{{ event.title }}</p>
+                      <p class="text-sm text-gray-500 truncate">{{ event.address }}</p>
+                      <p class="text-xs text-teal-600 mt-1">
+                        {{ formatEventDate(event.start_date) }}
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              }
+            </div>
+
+            @if (selectedEventIds().length === 0) {
+              <p class="text-sm text-red-500 mt-2">Debes seleccionar al menos un evento</p>
+            } @else {
+              <p class="text-sm text-gray-500 mt-2">
+                {{ selectedEventIds().length }} evento(s) seleccionado(s)
+              </p>
+            }
+          }
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             SECCIÓN: FECHA LÍMITE
+             ═══════════════════════════════════════════════════════════════════ -->
+        <section class="space-y-4">
+          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Fecha Límite de Confirmación
+          </h2>
+
+          <div class="max-w-md">
+            <div
+              class="appDatepicker"
+              [formControl]="form.controls.max_date"
+              datepickerId="max_date"
+              [required]="true"
+              placeholder="Selecciona la fecha límite"
+              label="Fecha Máxima de Confirmación"
+              [minDate]="minDate"
+              [maxDate]="maxDateForConfirmation()"
+              [errorMessage]="getMaxDateError()"
+            ></div>
+            @if (selectedEventIds().length > 0 && maxDateForConfirmation()) {
+              <p class="text-xs text-gray-500 mt-2">
+                La fecha límite debe ser anterior al {{ maxDateForConfirmation() | date:'d/MMM/yyyy' }}
+                (un día antes del primer evento seleccionado)
+              </p>
+            }
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             SECCIÓN: LISTA DE INVITADOS
+             ═══════════════════════════════════════════════════════════════════ -->
+        <section class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              Lista de Invitados (opcional)
+            </h2>
+            <span class="text-sm text-gray-500">
+              {{ currentGuestsCount() }}/{{ maxGuests() }}
+            </span>
+          </div>
+
+          <p class="text-sm text-gray-500">
+            Agrega los nombres de las personas que deben aparecer en la invitación.
+            El número máximo está limitado por la cantidad de invitados ingresada.
+          </p>
+
+          <!-- Tabla de invitados -->
+          <div class="bg-gray-50 rounded-lg overflow-hidden">
+            @if (guestsArray.length > 0) {
+              <!-- Vista desktop: tabla -->
+              <div class="hidden md:block">
+                <table class="w-full">
+                  <thead class="bg-gray-100">
+                    <tr>
+                      <th class="text-left px-4 py-3 text-sm font-medium text-gray-600 w-12">#</th>
+                      <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Nombre Completo <span class="text-red-500">*</span></th>
+                      <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Correo Electrónico</th>
+                      <th class="text-center px-4 py-3 text-sm font-medium text-gray-600 w-20">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (guest of guestsArray.controls; track $index; let i = $index) {
+                      <tr class="border-t border-gray-200">
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ i + 1 }}</td>
+                        <td class="px-4 py-2">
+                          <input
+                            type="text"
+                            [formControl]="guest.controls.full_name"
+                            class="guest-input"
+                            placeholder="Nombre del invitado"
+                          />
+                          @if (getGuestNameError(i)) {
+                            <p class="text-xs text-red-500 mt-1">{{ getGuestNameError(i) }}</p>
+                          }
+                        </td>
+                        <td class="px-4 py-2">
+                          <input
+                            type="email"
+                            [formControl]="guest.controls.email"
+                            class="guest-input"
+                            placeholder="correo@ejemplo.com (opcional)"
+                          />
+                          @if (getGuestEmailError(i)) {
+                            <p class="text-xs text-red-500 mt-1">{{ getGuestEmailError(i) }}</p>
+                          }
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                          <button
+                            type="button"
+                            (click)="removeGuest(i)"
+                            class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-lg transition-colors"
+                            title="Eliminar invitado"
+                          >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Vista mobile: cards -->
+              <div class="md:hidden space-y-3 p-3">
+                @for (guest of guestsArray.controls; track $index; let i = $index) {
+                  <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-sm font-medium text-gray-600">Invitado #{{ i + 1 }}</span>
+                      <button
+                        type="button"
+                        (click)="removeGuest(i)"
+                        class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-lg transition-colors"
+                        title="Eliminar invitado"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="space-y-3">
+                      <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">
+                          Nombre Completo <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          [formControl]="guest.controls.full_name"
+                          class="guest-input"
+                          placeholder="Nombre del invitado"
+                        />
+                        @if (getGuestNameError(i)) {
+                          <p class="text-xs text-red-500 mt-1">{{ getGuestNameError(i) }}</p>
+                        }
+                      </div>
+                      <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1">
+                          Correo Electrónico
+                        </label>
+                        <input
+                          type="email"
+                          [formControl]="guest.controls.email"
+                          class="guest-input"
+                          placeholder="correo@ejemplo.com (opcional)"
+                        />
+                        @if (getGuestEmailError(i)) {
+                          <p class="text-xs text-red-500 mt-1">{{ getGuestEmailError(i) }}</p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="text-center py-8 text-gray-500">
+                <svg class="w-10 h-10 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+                <p>No hay invitados agregados</p>
+              </div>
+            }
+          </div>
+
+          <!-- Botón agregar invitado -->
+          @if (canAddMoreGuests()) {
+            <button
+              type="button"
+              (click)="addGuest()"
+              class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              Agregar Invitado
+            </button>
+          } @else if (maxGuests() > 0) {
+            <p class="text-sm text-amber-600">
+              Has alcanzado el límite máximo de {{ maxGuests() }} invitados
+            </p>
+          } @else {
+            <p class="text-sm text-gray-500">
+              Ingresa una cantidad de invitados para poder agregar nombres
+            </p>
+          }
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             BOTONES DE ACCIÓN
+             ═══════════════════════════════════════════════════════════════════ -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-gray-200">
+          <!-- BOTÓN CANCELAR -->
+          <app-button
+            [text]="'Cancelar'"
+            type="button"
+            theme="outline-secondary"
+            [fullWidth]="true"
+            [onClick]="onCancel.bind(this)"
+          />
+
+          <!-- BOTÓN GUARDAR -->
+          <app-button
+            [text]="isLoading() ? 'Guardando...' : submitButtonText()"
+            type="submit"
+            theme="primary"
+            size="md"
+            [fullWidth]="true"
+            [disabled]="isLoading() || form.invalid || selectedEventIds().length === 0"
+          />
+        </div>
+
+        <!-- INFO ADICIONAL (solo en modo edición) -->
+        @if (isEditMode() && currentInvitation()) {
+          <div class="mt-4 p-4 bg-gray-50 rounded-lg text-xs text-gray-500">
+            <div class="flex items-center gap-4 flex-wrap">
+              @if (currentInvitation()?.registration_date) {
+                <span>
+                  <strong>Creada:</strong>
+                  {{ currentInvitation()?.registration_date | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              }
+              @if (currentInvitation()?.modification_date) {
+                <span>
+                  <strong>Última modificación:</strong>
+                  {{ currentInvitation()?.modification_date | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </form>
+    </div>
+  </app-form-container>
+}
