@@ -3,8 +3,7 @@ package org.wedding.app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -12,6 +11,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.wedding.app.dto.InvitationGuestDto;
 
 import java.math.BigDecimal;
@@ -24,7 +24,11 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_invitations")
+@EntityListeners(AuditingEntityListener.class)
 public class TblInvitation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tbl_invitations_id_gen")
@@ -42,6 +46,10 @@ public class TblInvitation {
     @NotNull
     @Column(name = "inv_relation", nullable = false)
     private Integer invRelation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inv_relation", insertable = false, updatable = false)
+    private TblRelation relation;
 
     @Size(max = 10)
     @Column(name = "inv_tablenum", length = 10)
@@ -71,4 +79,15 @@ public class TblInvitation {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "inv_guest_list")
     private List<InvitationGuestDto> guests;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tbl_events_invitations",
+            joinColumns = @JoinColumn(name = "evi_invitation"),
+            inverseJoinColumns = @JoinColumn(name = "evi_event")
+    )
+    private List<TblEvent> events;
+
+    @Column(name = "inv_uuid")
+    private String invUuid;
 }

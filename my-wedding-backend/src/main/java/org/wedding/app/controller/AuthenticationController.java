@@ -17,7 +17,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Autenticación", description = "Operaciones relacionadas con la autenticación de usuarios")
+@Tag(name = "Authentication", description = "Endpoints for managing authentication")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;

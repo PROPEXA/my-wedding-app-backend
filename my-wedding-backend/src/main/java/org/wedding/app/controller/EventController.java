@@ -17,13 +17,13 @@ import org.wedding.app.service.WeddingEventService;
 import java.net.URI;
 import java.util.List;
 
-import static org.wedding.app.controller.WeddingEventController.EVENT_CONTROLLER_BASE_URL;
+import static org.wedding.app.controller.EventController.EVENT_CONTROLLER_BASE_URL;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(EVENT_CONTROLLER_BASE_URL)
 @Tag(name = "Wedding Events")
-public class WeddingEventController {
+public class EventController {
 
     private final WeddingEventService weddingEventService;
     public static final String EVENT_CONTROLLER_BASE_URL = "/api/v1/wedding-events";

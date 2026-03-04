@@ -28,4 +28,14 @@ public interface TblEventRepository extends JpaRepository<TblEvent, Integer> {
      * @return una lista de objetos {@code TblEvent} asociados al usuario especificado.
      */
     List<TblEvent> findAllByEveCreatedByAndEveWeddingAndEveStatus(Integer createdBy, Integer weddingId, String status);
+
+    /**
+     * Checks if there exists any event with the specified IDs and created by the given user.
+     *
+     * @param ids       a list of event IDs to check for existence.
+     * @param createdBy the identifier of the user who created the events.
+     * @return {@code true} if at least one event exists with the specified IDs and created by the given user,
+     *         otherwise {@code false}.
+     */
+    boolean existsByIdInAndEveCreatedBy(List<Integer> ids, Integer createdBy);
 }

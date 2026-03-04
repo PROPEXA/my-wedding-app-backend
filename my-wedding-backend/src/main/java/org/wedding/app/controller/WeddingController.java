@@ -27,7 +27,6 @@ import java.util.List;
 public class WeddingController {
 
     private final WeddingService weddingService;
-    private final StatisticService statisticService;
     public static final String WEDDING_CONTROLLER_BASE_URL = "/api/v1/weddings";
 
     @PostMapping

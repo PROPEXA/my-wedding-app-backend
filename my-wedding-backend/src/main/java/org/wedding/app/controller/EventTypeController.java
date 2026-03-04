@@ -17,8 +17,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/wedding-events/types")
-@Tag(name = "Wedding Events Types", description = "Endpoints for managing wedding event types")
-public class WeddingEventTypeController {
+@Tag(name = "Event Types", description = "Endpoints for managing wedding event types")
+public class EventTypeController {
 
     private final WeddingEventTypeService weddingEventTypeService;
 

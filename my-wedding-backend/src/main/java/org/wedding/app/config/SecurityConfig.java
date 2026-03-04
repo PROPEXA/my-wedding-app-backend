@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**","/api/v1/languages").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/accounts", "/api/v1/accounts/confirm").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/invitations/{id}/public").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/invitations/confirm/public").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/actuator/**")
                         .access(new WebExpressionAuthorizationManager(
                                 "hasIpAddress('127.0.0.1') or hasIpAddress('::1')"
