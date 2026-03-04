@@ -1,5 +1,5 @@
 <div class="flex h-fit items-center justify-center">
-  <app-form-container size="xl">
+  <app-form-container size="4xl">
     <!-- HEADER CON TEMA BODA -->
     <app-form-header title="My Wedding App" subtitle="Crea tu cuenta y empieza a planificar" />
 
@@ -22,51 +22,51 @@
           </div>
         }
 
-        <!-- SECCIÓN: DATOS DE CUENTA -->
-        <div class="space-y-3 sm:space-y-4">
-          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 text-rose-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            Datos de Cuenta
-          </h2>
+        <!-- GRID PRINCIPAL: 2 COLUMNAS EN DESKTOP, 1 EN MOBILE -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <!-- COLUMNA IZQUIERDA: DATOS DE CUENTA -->
+          <div class="space-y-3 sm:space-y-4">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5 text-rose-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              Datos de Cuenta
+            </h2>
 
-          <!-- IDIOMA DROPDOWN -->
-          <div
-            class="appDropdown"
-            [formControl]="form.controls.language"
-            dropdownId="language"
-            [options]="languageOptions()"
-            placeholder="Selecciona tu idioma"
-            label="Idioma"
-            [required]="true"
-            [errorMessage]="getLanguageError()"
-          ></div>
+            <!-- IDIOMA DROPDOWN -->
+            <div
+              class="appDropdown"
+              [formControl]="form.controls.language"
+              dropdownId="language"
+              [options]="languageOptions()"
+              placeholder="Selecciona tu idioma"
+              label="Idioma"
+              [required]="true"
+              [errorMessage]="getLanguageError()"
+            ></div>
 
-          <!-- EMAIL INPUT -->
-          <div
-            class="appInput"
-            [formControl]="form.controls.email"
-            inputId="email"
-            type="email"
-            [required]="true"
-            placeholder="pareja@example.com"
-            label="Correo Electrónico"
-            [errorMessage]="getEmailError()"
-          ></div>
+            <!-- EMAIL INPUT -->
+            <div
+              class="appInput"
+              [formControl]="form.controls.email"
+              inputId="email"
+              type="email"
+              [required]="true"
+              placeholder="pareja@example.com"
+              label="Correo Electrónico"
+              [errorMessage]="getEmailError()"
+            ></div>
 
-          <!-- PASSWORD GRID -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <!-- PASSWORD INPUT -->
             <div
               class="appInput"
@@ -91,44 +91,41 @@
               [errorMessage]="getConfirmPasswordError()"
             ></div>
           </div>
-        </div>
 
-        <!-- DIVIDER -->
-        <div class="border-t border-rose-100"></div>
+          <!-- DIVIDER MOBILE -->
+          <div class="border-t border-rose-100 lg:hidden"></div>
 
-        <!-- SECCIÓN: DATOS DEL USUARIO -->
-        <div class="space-y-3 sm:space-y-4">
-          <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <svg
-              class="w-4 h-4 sm:w-5 sm:h-5 text-rose-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            Datos del Usuario
-          </h2>
+          <!-- COLUMNA DERECHA: DATOS DEL USUARIO -->
+          <div class="space-y-3 sm:space-y-4 lg:border-l lg:border-rose-100 lg:pl-8">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5 text-rose-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              Datos del Usuario
+            </h2>
 
-          <!-- FECHA NACIMIENTO DATEPICKER -->
-          <div
-            class="appDatepicker"
-            [formControl]="form.controls.birthDate"
-            datepickerId="birthDate"
-            [required]="true"
-            placeholder="Selecciona tu fecha de nacimiento"
-            label="Fecha de Nacimiento"
-            [maxDate]="maxBirthDate"
-            [errorMessage]="getBirthDateError()"
-          ></div>
+            <!-- FECHA NACIMIENTO DATEPICKER -->
+            <div
+              class="appDatepicker"
+              [formControl]="form.controls.birthDate"
+              datepickerId="birthDate"
+              [required]="true"
+              placeholder="Selecciona tu fecha de nacimiento"
+              label="Fecha de Nacimiento"
+              [maxDate]="maxBirthDate"
+              [errorMessage]="getBirthDateError()"
+            ></div>
 
-          <!-- NOMBRES Y APELLIDOS GRID -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <!-- NOMBRES INPUT -->
             <div
               class="appInput"
@@ -154,6 +151,9 @@
             ></div>
           </div>
         </div>
+
+        <!-- DIVIDER DESKTOP -->
+        <div class="hidden lg:block border-t border-rose-100"></div>
 
         <!-- TÉRMINOS Y CONDICIONES -->
         <div class="flex items-start gap-2">
