@@ -4,7 +4,7 @@ import { Auth } from '../model/auth.model';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Authenticated } from '../model/authenticated.mode';
 import { API } from '../env/env.dev';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ServerException } from '../exception/server.exception';
 
 @Injectable({ providedIn: 'root' })
@@ -28,14 +28,19 @@ export class AuthService {
   }
 
   refreshAuthentication(): Observable<Authenticated> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
+    const token = this.getRefreshToken();
+    if (!token) {
       this.logout();
       return throwError(() => new Error('No refresh token available'));
     }
+    const refreshToken = `${this.getTokenType()} ${token}`;
+
+    const headers = new HttpHeaders({
+      'X-Refresh': refreshToken,
+    });
 
     return this.http
-      .post<Authenticated>(`${API.baseUrl}/api/v1/auth/refresh`, { refreshToken })
+      .post<Authenticated>(`${API.baseUrl}/api/v1/auth/refresh`, {}, { headers })
       .pipe(
         tap((tokens) => this.saveTokens(tokens)),
         catchError((error) => {
@@ -56,6 +61,10 @@ export class AuthService {
 
   getRefreshToken(): string | null {
     return sessionStorage.getItem(this.refreshToken);
+  }
+
+  getTokenType(): string {
+    return sessionStorage.getItem(this.tokenType) || '';
   }
 
   private saveTokens(authenticated: Authenticated) {
