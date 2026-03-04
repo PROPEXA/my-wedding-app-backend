@@ -16,6 +16,7 @@ import org.wedding.app.dto.ConfirmationDto;
 import org.wedding.app.dto.InvitationDto;
 import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.dto.group.Post;
+import org.wedding.app.exception.ServiceException;
 import org.wedding.app.service.WeddingInvitationService;
 
 import java.net.URI;
@@ -76,10 +77,17 @@ public class InvitationController {
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get all invitations by event id")
     public ResponseEntity<List<InvitationDto>> getAllInvitationsByEventId(
-            @RequestParam("event_id") Integer eventId,
+            @RequestParam(name = "event_id", required = false) Integer eventId,
+            @RequestParam(name = "wedding_id", required = false) Integer weddingId,
             @ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable
     ) {
-        return ResponseEntity.ok(weddingInvitationService.obtainAllInvitationsByEventId(eventId, pageable));
+        if (weddingId != null) {
+            return ResponseEntity.ok(weddingInvitationService.obtainAllInvitationsByWeddingId(weddingId, pageable));
+        } else if (eventId != null) {
+            return ResponseEntity.ok(weddingInvitationService.obtainAllInvitationsByEventId(eventId, pageable));
+        } else {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "Se requiere al menos un parámetro: event_id o wedding_id");
+        }
     }
 
     @GetMapping("/{id}/public")

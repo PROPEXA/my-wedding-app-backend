@@ -17,6 +17,8 @@ public interface WeddingInvitationService {
 
     List<InvitationDto> obtainAllInvitationsByEventId(Integer eventId, Pageable pageable);
 
+    List<InvitationDto> obtainAllInvitationsByWeddingId(Integer weddingId, Pageable pageable);
+
     InvitationDto obtainInvitationByIdAndUuid(int id, String uuid);
 
     void confirmInvitation(ConfirmationDto confirmation);

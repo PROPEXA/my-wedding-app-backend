@@ -22,4 +22,6 @@ public interface TblEventInvitationRepository extends JpaRepository<TblEventInvi
 
     Optional<TblEventInvitation> findById_EviEventAndId_EviInvitationAndEviInvitation_InvUuid(Integer eventId, Integer invitationId, String uuid);
 
+    @Query("select i.eviInvitation from TblEventInvitation i where i.eviEvent.eveWedding = :weddingId")
+    List<TblInvitation> findByWeddingIdAndPageable(Integer weddingId, Pageable pageable);
 }

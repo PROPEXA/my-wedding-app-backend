@@ -108,6 +108,16 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
     }
 
     @Override
+    public List<InvitationDto> obtainAllInvitationsByWeddingId(Integer weddingId, Pageable pageable) {
+        Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
+        List<TblInvitation> invitations = tblEventInvitationRepository.findByWeddingIdAndPageable(weddingId,newPageable);
+        if(invitations.isEmpty()){
+            throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para la boda solicitada");
+        }
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false)).toList();
+    }
+
+    @Override
     public InvitationDto obtainInvitationByIdAndUuid(int id, String uuid) {
         final TblInvitation invitation = tblInvitationRepository.findByIdAndInvUuid(id, uuid)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Invitación no encontrada"));
