@@ -1,132 +1,131 @@
-<div class="px-4 sm:px-0 h-svh w-full flex items-center justify-center bg-linear-to-br from-rose-200 via-white to-rose-200 ">
-<!-- CARD LOGIN -->
-<app-form-container>
+<div
+  class="flex h-dvh items-center justify-center bg-amber-300 px-4 sm:px-0 w-full bg-linear-to-br from-rose-200 via-white to-rose-200"
+>
+  <!-- CARD LOGIN -->
+  <app-form-container>
+    <!-- HEADER CON TEMA BODA -->
+    <app-form-header title="My Wedding App" subtitle="Planifica tu día especial juntos" />
 
-  <!-- HEADER CON TEMA BODA -->
-  <app-form-header
-    title="My Wedding App"
-    subtitle="Planifica tu día especial juntos"/>
-
-  <!-- FORMULARIO LOGIN -->
-  <div class="p-5 sm:p-8">
-    <form [formGroup]="form" class="space-y-3 sm:space-y-4">
-      <!-- ERROR DEL SERVIDOR -->
-      @if (serverError()) {
-        <div
-          class="bg-red-50 border border-red-200 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm flex items-center gap-2"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>{{ serverError() }}</span>
-        </div>
-      }
-
-      <!-- EMAIL INPUT -->
-      <div
-        class="appInput"
-        [formControl]="form.controls.email"
-        inputId="email"
-        type="email"
-        [required]="true"
-        placeholder="pareja@example.com"
-        label="Correo Electrónico"
-        [errorMessage]="getEmailError()"
-      ></div>
-
-      <!-- PASSWORD INPUT -->
-      <div
-        class="appInput"
-        [formControl]="form.controls.password"
-        inputId="password"
-        type="password"
-        [required]="true"
-        placeholder="••••••••"
-        label="Contraseña"
-        [errorMessage]="getPasswordError()"
-      ></div>
-
-      <!-- REMEMBER Y FORGOT -->
-      <div
-        class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 text-sm"
-      >
-        <label class="flex items-center text-gray-600 cursor-pointer">
-          <input
-            type="checkbox"
-            formControlName="rememberMe"
-            class="w-4 h-4 text-rose-500 rounded focus:ring-rose-400"
-          />
-          <span class="ml-2 text-xs sm:text-sm">Recuerda mis datos</span>
-        </label>
-        <a
-          href="#"
-          class="text-rose-500 hover:text-rose-700 font-medium transition-colors text-xs sm:text-sm"
-        >
-          ¿Olvidaste tu contraseña?
-        </a>
-      </div>
-
-      <!-- BOTÓN LOGIN -->
-      <app-button
-        type="submit"
-        [onClickHandlers]="[onSubmitLogin]"
-        theme="primary"
-        [disabled]="isLoading()"
-      >
-        @if (isLoading()) {
-          <span class="flex items-center justify-center gap-2">
-            <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-                fill="none"
-              />
+    <!-- FORMULARIO LOGIN -->
+    <div class="p-5 sm:p-8">
+      <form [formGroup]="form" class="space-y-3 sm:space-y-4">
+        <!-- ERROR DEL SERVIDOR -->
+        @if (serverError()) {
+          <div
+            class="bg-red-50 border border-red-200 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm flex items-center gap-2"
+          >
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
               />
             </svg>
-            Iniciando sesión...
-          </span>
-        } @else {
-          Comenzar Juntos
+            <span>{{ serverError() }}</span>
+          </div>
         }
-      </app-button>
-    </form>
 
-    <!-- DIVIDER -->
-    <div class="flex items-center my-4 sm:my-6">
-      <div class="flex-1 border-t-2 border-rose-200"></div>
-      <span class="px-3 text-gray-400 text-xs sm:text-sm">O</span>
-      <div class="flex-1 border-t-2 border-rose-200"></div>
+        <!-- EMAIL INPUT -->
+        <div
+          class="appInput"
+          [formControl]="form.controls.email"
+          inputId="email"
+          type="email"
+          [required]="true"
+          placeholder="pareja@example.com"
+          label="Correo Electrónico"
+          [errorMessage]="getEmailError()"
+        ></div>
+
+        <!-- PASSWORD INPUT -->
+        <div
+          class="appInput"
+          [formControl]="form.controls.password"
+          inputId="password"
+          type="password"
+          [required]="true"
+          placeholder="••••••••"
+          label="Contraseña"
+          [errorMessage]="getPasswordError()"
+        ></div>
+
+        <!-- REMEMBER Y FORGOT -->
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 text-sm"
+        >
+          <label class="flex items-center text-gray-600 cursor-pointer">
+            <input
+              type="checkbox"
+              formControlName="rememberMe"
+              class="w-4 h-4 text-rose-500 rounded focus:ring-rose-400"
+            />
+            <span class="ml-2 text-xs sm:text-sm">Recuerda mis datos</span>
+          </label>
+          <a
+            href="#"
+            class="text-rose-500 hover:text-rose-700 font-medium transition-colors text-xs sm:text-sm"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- BOTÓN LOGIN -->
+        <app-button
+          type="submit"
+          [onClickHandlers]="[onSubmitLogin]"
+          theme="primary"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <span class="flex items-center justify-center gap-2">
+              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  fill="none"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              Iniciando sesión...
+            </span>
+          } @else {
+            Comenzar Juntos
+          }
+        </app-button>
+      </form>
+
+      <!-- DIVIDER -->
+      <div class="flex items-center my-4 sm:my-6">
+        <div class="flex-1 border-t-2 border-rose-200"></div>
+        <span class="px-3 text-gray-400 text-xs sm:text-sm">O</span>
+        <div class="flex-1 border-t-2 border-rose-200"></div>
+      </div>
+
+      <!-- SIGN UP -->
+      <p class="text-center text-gray-600 text-xs sm:text-base">
+        ¿Aún no tienes cuenta?
+        <a
+          routerLink="../signup"
+          class="text-rose-500 font-bold hover:text-rose-700 transition-colors"
+        >
+          Regístrate aquí
+        </a>
+      </p>
     </div>
 
-    <!-- SIGN UP -->
-    <p class="text-center text-gray-600 text-xs sm:text-base">
-      ¿Aún no tienes cuenta?
-      <a
-        routerLink="../signup"
-        class="text-rose-500 font-bold hover:text-rose-700 transition-colors"
-      >
-        Regístrate aquí
-      </a>
-    </p>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="bg-gray-50 px-5 sm:px-8 py-3 sm:py-4 text-center text-xs text-gray-500 rounded-b-2xl">
-    <p>🎊 Tu boda, perfectamente organizada 🎊</p>
-  </div >
-
-</app-form-container>
-
+    <!-- FOOTER -->
+    <div
+      class="bg-gray-50 px-5 sm:px-8 py-3 sm:py-4 text-center text-xs text-gray-500 rounded-b-2xl"
+    >
+      <p>🎊 Tu boda, perfectamente organizada 🎊</p>
+    </div>
+  </app-form-container>
 </div>

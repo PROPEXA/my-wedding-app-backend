@@ -3,6 +3,7 @@ package org.wedding.app.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.RandomStringGenerator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,9 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class AccountEventListener {
+
+    @Value("${spring.security.cors.origin}")
+    private String originUrl;
 
     private final EmailNotification emailNotification;
     private final TemplateEngine templateEngine;
@@ -55,7 +59,7 @@ public class AccountEventListener {
         Context context = new Context();
         context.setVariable("fullName", getFullName(tblAccount));
         context.setVariable("confirmationCode", confirmationConde);
-        context.setVariable("fullUrl", "http://localhost:4200/auth/confirm/" + uuid);
+        context.setVariable("fullUrl", originUrl + "/auth/confirm/" + uuid);
         String htmlContent = templateEngine.process("layout_email_confirm_account", context);
         emailNotification.sendEmailAsync(tblAccount.getAccEmail(), "Confirma tu cuenta", htmlContent)
                 .join();

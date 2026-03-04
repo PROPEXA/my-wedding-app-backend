@@ -12,18 +12,18 @@ services:
     container_name: wedding-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: db_my_wedding_app
+      POSTGRES_DB: db_myweddingapp
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - my-wedding-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d db_my_wedding_app"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d db_myweddingapp"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
     environment:
       # Database Configuration
-      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/db_my_wedding_app}
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/db_myweddingapp}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
 
@@ -71,7 +71,7 @@ services:
         -Djava.security.egd=file:/dev/./urandom
         -Dspring.profiles.active=prod
     ports:
-      - "8080:8080"
+      - "8088:8080"
     networks:
       - my-wedding-network
     healthcheck:
