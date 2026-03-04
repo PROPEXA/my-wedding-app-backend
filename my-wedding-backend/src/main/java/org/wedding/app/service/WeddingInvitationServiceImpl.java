@@ -19,10 +19,8 @@ import org.wedding.app.repository.TblEventInvitationRepository;
 import org.wedding.app.repository.TblEventRepository;
 import org.wedding.app.repository.TblInvitationRepository;
 import org.wedding.app.security.AuthUtil;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.wedding.app.dto.enums.ConfirmationType;
-import org.wedding.app.dto.group.Post;
 
 import java.util.List;
 

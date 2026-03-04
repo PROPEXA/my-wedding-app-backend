@@ -96,7 +96,7 @@ export class StatsCard {
   });
 
   peopleInvited = computed(() => {
-    const { confirmed, declined, waiting } = this.stats();
-    return confirmed + declined + waiting;
+    const { people_confirmed, people_declined, people_waiting } = this.stats();
+    return people_confirmed + people_declined + people_waiting;
   });
 }

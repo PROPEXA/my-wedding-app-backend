@@ -9,12 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.wedding.app.dto.ResponseDto;
-import org.wedding.app.dto.StatisticDto;
 import org.wedding.app.dto.WeddingDto;
 import org.wedding.app.dto.group.Post;
 import org.wedding.app.dto.group.Update;
-import org.wedding.app.service.StatisticService;
-import org.wedding.app.service.StatisticServiceImpl;
 import org.wedding.app.service.WeddingService;
 
 import java.net.URI;
