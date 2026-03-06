@@ -4,13 +4,13 @@
  */
 
 // Re-exportar Invitation desde el modelo core de la API
-export type { Invitation } from '../../../../core/model/invitation.mode';
-import type { Invitation } from '../../../../core/model/invitation.mode';
+export type { Invitation } from '../../../../core/model/invitation.model';
+import type { Invitation } from '../../../../core/model/invitation.model';
 
 /**
  * Acciones disponibles para una invitación
  */
-export type InvitationAction = 'view' | 'edit' | 'delete';
+export type InvitationAction = 'view' | 'edit' | 'delete' | 'copy';
 
 /**
  * Evento emitido cuando se realiza una acción sobre una invitación

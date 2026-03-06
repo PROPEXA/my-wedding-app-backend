@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Invitation } from '../model/invitation.mode';
+import { Invitation } from '../model/invitation.model';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { ResponseServer } from '../model/response.mode';
 import { HttpClient, HttpParams } from '@angular/common/http';

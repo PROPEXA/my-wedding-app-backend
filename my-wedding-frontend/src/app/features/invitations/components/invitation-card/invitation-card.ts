@@ -1,5 +1,5 @@
-import { Component, input, output } from '@angular/core';
-import { Invitation } from '../../../../core/model/invitation.mode';
+import { Component, input, output, signal } from '@angular/core';
+import { Invitation } from '../../../../core/model/invitation.model';
 import { InvitationAction, InvitationActionEvent, InvitationUtils } from './invitation.model';
 
 /**
@@ -43,6 +43,13 @@ export class InvitationCard {
 
   /** Emitido cuando se alterna el menú */
   menuToggle = output<number>();
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SIGNALS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /** Indica si el link fue copiado recientemente */
+  isCopied = signal<boolean>(false);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // METHODS
@@ -143,5 +150,26 @@ export class InvitationCard {
    */
   formatDate(date: Date | undefined): string {
     return InvitationUtils.formatDate(date);
+  }
+
+  /**
+   * Genera y copia el link de invitación al portapapeles
+   */
+  async copyInvitationLink(): Promise<void> {
+    const invitation = this.invitation();
+    const baseUrl = window.location.origin;
+    const link = `${baseUrl}/app/invitations/public/${invitation.id}?token=${invitation.uuid}`;
+
+    try {
+      await navigator.clipboard.writeText(link);
+      this.isCopied.set(true);
+
+      // Resetear el estado después de 2 segundos
+      setTimeout(() => {
+        this.isCopied.set(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error al copiar el link:', error);
+    }
   }
 }

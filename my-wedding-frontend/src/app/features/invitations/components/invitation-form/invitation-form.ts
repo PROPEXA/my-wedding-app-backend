@@ -27,7 +27,7 @@ import { InvitationService } from '../../../../core/api/invitation.service';
 import { RelationService } from '../../../../core/api/relation.service';
 import { EventService } from '../../../../core/api/event.service';
 import { AlertService } from '../../../../shared/components/ui/alert/alert.service';
-import { Invitation } from '../../../../core/model/invitation.mode';
+import { Invitation } from '../../../../core/model/invitation.model';
 import { Relation } from '../../../../core/model/relation.mode';
 import { WeddingEvent } from '../../../../core/model/wedding-event.model';
 import { Guest } from '../../../../core/model/guest.mode';

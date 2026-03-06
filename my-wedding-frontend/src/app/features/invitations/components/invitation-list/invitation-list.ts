@@ -1,5 +1,5 @@
 import { Component, input, output, signal } from '@angular/core';
-import { Invitation } from '../../../../core/model/invitation.mode';
+import { Invitation } from '../../../../core/model/invitation.model';
 import { InvitationActionEvent } from '../invitation-card/invitation.model';
 import { InvitationCard } from '../invitation-card/invitation-card';
 import { InvitationEmptyState } from '../invitation-empty-state/invitation-empty-state';

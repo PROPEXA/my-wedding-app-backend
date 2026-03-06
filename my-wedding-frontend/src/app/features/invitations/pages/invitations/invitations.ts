@@ -7,7 +7,7 @@ import { AlertService } from '../../../../shared/components/ui/alert/alert.servi
 import { StatsCard } from '../../../dashboard/pages/components/stats-card/stats-card';
 import { InvitationList } from '../../components/invitation-list/invitation-list';
 import { InvitationActionEvent } from '../../components/invitation-card/invitation.model';
-import { Invitation } from '../../../../core/model/invitation.mode';
+import { Invitation } from '../../../../core/model/invitation.model';
 import { Wedding } from '../../../../core/model/wedding.model';
 import { WeddingEvent } from '../../../../core/model/wedding-event.model';
 import { Statistic } from '../../../../core/model/statistic.mode';
