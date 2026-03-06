@@ -14,6 +14,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/auth/auth.routes').then((m) => m.authRoutes),
       },
+      {
+        path: 'app/invitations/:id/public',
+        loadComponent: () =>
+          import('./features/invitations/pages/invitation-public/invitation-public').then((m) => m.InvitationPublic),
+      },
     ],
   },
   {
