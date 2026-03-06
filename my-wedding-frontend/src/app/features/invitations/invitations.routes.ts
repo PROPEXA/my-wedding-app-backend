@@ -11,4 +11,9 @@ export const invitationsRoutes: Routes = [
     loadComponent: () =>
       import('./pages/invitation-new/invitation-new').then((m) => m.InvitationNew),
   },
+  {
+    path: ':id/public',
+    loadComponent: () =>
+      import('./pages/invitation-public/invitation-public').then((m) => m.InvitationPublic),
+  }
 ];

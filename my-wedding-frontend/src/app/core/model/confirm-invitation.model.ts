@@ -4,5 +4,5 @@ export interface ConfirmInvitation {
   confirmations: {
     confirmation_type: 'CONFIRM' | 'DECLINE';
     event_id: number;
-  };
+  }[];
 }
