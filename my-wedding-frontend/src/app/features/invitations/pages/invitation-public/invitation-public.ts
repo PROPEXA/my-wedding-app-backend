@@ -239,9 +239,21 @@ export class InvitationPublic implements OnInit {
 
   /**
    * Genera el link de Google Maps basado en latitud y longitud
+   * Detecta si los valores están invertidos y los corrige automáticamente
    */
   getGoogleMapsLink(latitude: string | undefined, longitude: string | undefined): string {
     if (!latitude || !longitude) return '';
+
+    const lat = parseFloat(latitude);
+    const lng = parseFloat(longitude);
+
+    // La latitud debe estar entre -90 y 90
+    // Si lat está fuera de ese rango, los valores están invertidos
+    if (Math.abs(lat) > 90) {
+      // Están invertidos, usar longitude como lat y latitude como lng
+      return `https://www.google.com/maps?q=${longitude},${latitude}`;
+    }
+
     return `https://www.google.com/maps?q=${latitude},${longitude}`;
   }
 
