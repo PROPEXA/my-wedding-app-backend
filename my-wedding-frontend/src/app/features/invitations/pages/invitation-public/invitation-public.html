@@ -150,21 +150,6 @@
                       <p class="text-sm text-gray-500">{{ guest.email }}</p>
                     }
                   </div>
-
-                  <!-- Estado de confirmación -->
-                  @if (guest.is_confirmed === true) {
-                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                      Confirmado
-                    </span>
-                  } @else if (guest.is_confirmed === false) {
-                    <span class="px-3 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">
-                      No asistirá
-                    </span>
-                  } @else {
-                    <span class="px-3 py-1 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
-                      Pendiente
-                    </span>
-                  }
                 </div>
               }
             </div>
@@ -223,44 +208,71 @@
                         <span>{{ event.address }}</span>
                       </div>
                     }
+
+                    <!-- Botón de Google Maps -->
+                    @if (event.latitude && event.longitude) {
+                      <a
+                        [href]="getGoogleMapsLink(event.latitude, event.longitude)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl text-sm font-medium transition-colors border border-blue-200"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                        Ver en Google Maps
+                      </a>
+                    }
                   </div>
 
-                  <!-- Confirmación por evento -->
-                  <div class="mt-4 pt-4 border-t border-rose-100">
-                    <p class="text-xs text-gray-500 mb-3 text-center">Confirmar asistencia para este evento:</p>
-                    <div class="flex gap-2">
-                      @if (event.id) {
-                        <button
-                          (click)="updateEventConfirmation(event.id, 'CONFIRM')"
-                          [class]="'flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ' +
-                            (getEventConfirmation(event.id) === 'CONFIRM'
-                              ? 'bg-green-500 text-white shadow-md'
-                              : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200')"
-                        >
-                          <span class="flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Asistiré
-                          </span>
-                        </button>
-                        <button
-                          (click)="updateEventConfirmation(event.id, 'DECLINE')"
-                          [class]="'flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ' +
-                            (getEventConfirmation(event.id) === 'DECLINE'
-                              ? 'bg-red-500 text-white shadow-md'
-                              : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200')"
-                        >
-                          <span class="flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            No asistiré
-                          </span>
-                        </button>
-                      }
+                  <!-- Confirmación por evento (solo si no está confirmada) -->
+                  @if (!isAlreadyConfirmed()) {
+                    <div class="mt-4 pt-4 border-t border-rose-100">
+                      <p class="text-xs text-gray-500 mb-3 text-center">Confirmar asistencia para este evento:</p>
+                      <div class="flex gap-2">
+                        @if (event.id) {
+                          <button
+                            (click)="updateEventConfirmation(event.id, 'CONFIRM')"
+                            [class]="'flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ' +
+                              (getEventConfirmation(event.id) === 'CONFIRM'
+                                ? 'bg-green-500 text-white shadow-md'
+                                : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200')"
+                          >
+                            <span class="flex items-center justify-center gap-2">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                              </svg>
+                              Asistiré
+                            </span>
+                          </button>
+                          <button
+                            (click)="updateEventConfirmation(event.id, 'DECLINE')"
+                            [class]="'flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all ' +
+                              (getEventConfirmation(event.id) === 'DECLINE'
+                                ? 'bg-red-500 text-white shadow-md'
+                                : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200')"
+                          >
+                            <span class="flex items-center justify-center gap-2">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                              </svg>
+                              No asistiré
+                            </span>
+                          </button>
+                        }
+                      </div>
                     </div>
-                  </div>
+                  } @else {
+                    <!-- Mostrar estado de confirmación si ya está confirmada -->
+                    <div class="mt-4 pt-4 border-t border-rose-100 text-center">
+                      <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Invitación confirmada
+                      </span>
+                    </div>
+                  }
                 </div>
               }
             </div>
@@ -274,28 +286,33 @@
           </div>
         }
 
-        <!-- Botón de confirmar -->
-        <section class="px-8 pb-12">
-          <button
-            (click)="confirmAttendance()"
-            [disabled]="isConfirming()"
-            class="w-full py-4 bg-linear-to-r from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            @if (isConfirming()) {
-              <span class="flex items-center justify-center gap-2">
-                <div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                Confirmando...
-              </span>
-            } @else {
-              <span class="flex items-center justify-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                </svg>
-                Confirmar Invitación
-              </span>
+        <!-- Botón de confirmar (solo si no está confirmada) -->
+        @if (!isAlreadyConfirmed()) {
+          <section class="px-8 pb-12">
+            <button
+              (click)="confirmAttendance()"
+              [disabled]="isConfirming() || !allEventsSelected()"
+              class="w-full py-4 bg-linear-to-r from-rose-400 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              @if (isConfirming()) {
+                <span class="flex items-center justify-center gap-2">
+                  <div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  Confirmando...
+                </span>
+              } @else {
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                  </svg>
+                  Confirmar Invitación
+                </span>
+              }
+            </button>
+            @if (!allEventsSelected()) {
+              <p class="text-center text-xs text-amber-600 mt-2">Seleccione una opción para cada evento</p>
             }
-          </button>
-        </section>
+          </section>
+        }
 
         <!-- Footer mensaje -->
         <footer class="text-center pb-12 px-8">

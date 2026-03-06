@@ -16,7 +16,7 @@ export interface Invitation {
   events: Event[];
   uuid: string;
   confirmations: {
-    confirmation_type: 'CONFIRM' | 'DECLINE';
+    confirmation_type: 'CONFIRM' | 'DECLINE' | 'PENDING';
     event_id: number;
   }[];
 }

@@ -44,14 +44,13 @@ public final class InvitationMapper {
                 null,
                 withEvents ? entity.getEvents().stream().map(EventMapper::toDto).toList() : null,
                 withConfirmations ? entity.getEventInvitations().stream()
+                        .filter(e -> e.getEviStatus().equalsIgnoreCase("C") || e.getEviStatus().equalsIgnoreCase("D"))
                         .map(e -> {
                             return switch (e.getEviStatus()) {
                                 case "C" ->
                                         new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.CONFIRM);
                                 case "D" ->
                                         new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.DECLINE);
-                                case "P" ->
-                                        new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.PENDING);
                                 default -> null;
                             };
                         })

@@ -142,6 +142,13 @@ export class InvitationPublic implements OnInit {
     this.isConfirming.set(true);
     this.confirmationError.set(null);
 
+    // Validar que todos los eventos tengan selección
+    if (!this.allEventsSelected()) {
+      this.confirmationError.set('Por favor seleccione una opción de asistencia para todos los eventos.');
+      this.isConfirming.set(false);
+      return;
+    }
+
     // Construir la lista de confirmaciones
     const confirmationsList: { confirmation_type: 'CONFIRM' | 'DECLINE'; event_id: number }[] = [];
 
@@ -220,5 +227,36 @@ export class InvitationPublic implements OnInit {
    */
   getGuests(): Guest[] {
     return this.invitation()?.guests || [];
+  }
+
+  /**
+   * Verifica si la invitación ya fue confirmada
+   */
+  isAlreadyConfirmed(): boolean {
+    const invitation = this.invitation();
+    return !!invitation?.confirmations && invitation.confirmations.length > 0;
+  }
+
+  /**
+   * Genera el link de Google Maps basado en latitud y longitud
+   */
+  getGoogleMapsLink(latitude: string | undefined, longitude: string | undefined): string {
+    if (!latitude || !longitude) return '';
+    return `https://www.google.com/maps?q=${latitude},${longitude}`;
+  }
+
+  /**
+   * Verifica si todos los eventos tienen una selección
+   */
+  allEventsSelected(): boolean {
+    const events = this.getEvents();
+    const confirmations = this.eventConfirmations();
+
+    for (const event of events) {
+      if (event.id && !confirmations.get(event.id)) {
+        return false;
+      }
+    }
+    return events.length > 0;
   }
 }
