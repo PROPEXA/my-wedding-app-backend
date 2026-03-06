@@ -158,7 +158,7 @@ export class InvitationCard {
   async copyInvitationLink(): Promise<void> {
     const invitation = this.invitation();
     const baseUrl = window.location.origin;
-    const link = `${baseUrl}/app/invitations/public/${invitation.id}?token=${invitation.uuid}`;
+    const link = `${baseUrl}/app/invitations/${invitation.id}/public?token=${invitation.uuid}`;
 
     try {
       await navigator.clipboard.writeText(link);

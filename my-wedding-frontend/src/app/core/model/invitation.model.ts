@@ -1,5 +1,5 @@
-import { Guest } from "./guest.mode";
-import { Relation } from "./relation.mode";
+import { Guest } from './guest.mode';
+import { Relation } from './relation.mode';
 
 export interface Invitation {
   events_id: number[];
@@ -15,4 +15,8 @@ export interface Invitation {
   guests: Guest[];
   events: Event[];
   uuid: string;
+  confirmations: {
+    confirmation_type: 'CONFIRM' | 'DECLINE';
+    event_id: number;
+  }[];
 }
