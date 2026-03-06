@@ -68,12 +68,18 @@
           <p class="text-rose-400 text-sm tracking-[0.3em] uppercase mb-4 font-light">
             Nos complace invitarlos a
           </p>
-          <h1 class="text-rose-300 text-lg tracking-wider mb-2">Nuestra Boda</h1>
+          <h1 class="text-rose-300 text-lg tracking-wider mb-6">Nuestra Boda</h1>
 
-          <!-- Título de la invitación -->
-          <h2 class="font-script text-5xl md:text-6xl text-gray-800 mb-6 leading-tight">
-            {{ invitation()?.title || 'Invitación Especial' }}
-          </h2>
+          <!-- Nombres de los novios -->
+          <div class="mb-6">
+            <p class="font-script text-5xl md:text-6xl text-gray-800 leading-tight">
+              {{ invitation()?.wedding?.groom_firstname }}
+            </p>
+            <p class="font-script text-3xl text-rose-400 my-2">&amp;</p>
+            <p class="font-script text-5xl md:text-6xl text-gray-800 leading-tight">
+              {{ invitation()?.wedding?.bride_firstname }}
+            </p>
+          </div>
 
           <!-- Separador decorativo -->
           <div class="flex items-center justify-center gap-3 mb-6">
@@ -84,6 +90,12 @@
             <div class="h-px w-16 bg-linear-to-l from-transparent to-rose-300"></div>
           </div>
 
+          <!-- Título de la invitación -->
+          <p class="text-gray-500 text-sm uppercase tracking-wider mb-1">Invitación para</p>
+          <h2 class="font-serif text-2xl text-gray-700 mb-6">
+            {{ invitation()?.title || 'Invitación Especial' }}
+          </h2>
+
           <!-- Número de invitación -->
           <div class="inline-block bg-rose-50 rounded-full px-6 py-2">
             <span class="text-rose-400 text-sm">Invitación No. </span>
@@ -93,29 +105,44 @@
 
         <!-- Información de fecha límite y mesa -->
         <section class="px-8 pb-8">
-          <div class="grid grid-cols-2 gap-4 mb-8">
-            <!-- Fecha límite de confirmación -->
-            <div class="text-center p-4 bg-linear-to-br from-amber-50 to-rose-50 rounded-2xl border border-rose-100">
-              <div class="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
+          @if (!isAlreadyConfirmed()) {
+            <div class="grid grid-cols-2 gap-4 mb-8">
+              <!-- Fecha límite de confirmación -->
+              <div class="text-center p-4 bg-linear-to-br from-amber-50 to-rose-50 rounded-2xl border border-rose-100">
+                <div class="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Confirmar antes de</p>
+                <p class="text-sm font-semibold text-gray-700">{{ formatDate(invitation()?.max_date) }}</p>
               </div>
-              <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Confirmar antes de</p>
-              <p class="text-sm font-semibold text-gray-700">{{ formatDate(invitation()?.max_date) }}</p>
-            </div>
 
-            <!-- Número de mesa -->
-            <div class="text-center p-4 bg-linear-to-br from-amber-50 to-rose-50 rounded-2xl border border-rose-100">
-              <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                </svg>
+              <!-- Número de mesa -->
+              <div class="text-center p-4 bg-linear-to-br from-amber-50 to-rose-50 rounded-2xl border border-rose-100">
+                <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                  </svg>
+                </div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Mesa asignada</p>
+                <p class="text-2xl font-serif text-gray-700">{{ invitation()?.table_number || 'Por asignar' }}</p>
               </div>
-              <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Mesa asignada</p>
-              <p class="text-2xl font-serif text-gray-700">{{ invitation()?.table_number || 'Por asignar' }}</p>
             </div>
-          </div>
+          } @else {
+            <!-- Solo mesa si ya está confirmada -->
+            <div class="mb-8">
+              <div class="text-center p-4 bg-linear-to-br from-amber-50 to-rose-50 rounded-2xl border border-rose-100 max-w-xs mx-auto">
+                <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                  </svg>
+                </div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Mesa asignada</p>
+                <p class="text-2xl font-serif text-gray-700">{{ invitation()?.table_number || 'Por asignar' }}</p>
+              </div>
+            </div>
+          }
 
           <!-- Cantidad de invitados -->
           <div class="text-center mb-8 p-4 bg-linear-to-r from-rose-50 via-white to-rose-50 rounded-2xl border border-rose-100">

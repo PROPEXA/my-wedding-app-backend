@@ -1,5 +1,6 @@
 import { Guest } from './guest.mode';
 import { Relation } from './relation.mode';
+import { Wedding } from './wedding.model';
 
 export interface Invitation {
   events_id: number[];
@@ -19,4 +20,5 @@ export interface Invitation {
     confirmation_type: 'CONFIRM' | 'DECLINE' | 'PENDING';
     event_id: number;
   }[];
+  wedding: Wedding;
 }
