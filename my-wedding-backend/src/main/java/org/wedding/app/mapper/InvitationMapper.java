@@ -29,7 +29,7 @@ public final class InvitationMapper {
                 .build();
     }
 
-    public static InvitationDto toDto(TblInvitation entity, boolean withEvents, boolean withConfirmations) {
+    public static InvitationDto toDto(TblInvitation entity, boolean withEvents, boolean withConfirmations, boolean includeWedding) {
         return new InvitationDto(
                 entity.getId(),
                 entity.getInvTitle(),
@@ -55,7 +55,8 @@ public final class InvitationMapper {
                             };
                         })
                         .toList() : null,
-                entity.getInvUuid()
+                entity.getInvUuid(),
+                includeWedding ? WeddingMapper.toDto(entity.getEventInvitations().get(0).getEviEvent().getEveWeddingObj()) : null
         );
     }
 }

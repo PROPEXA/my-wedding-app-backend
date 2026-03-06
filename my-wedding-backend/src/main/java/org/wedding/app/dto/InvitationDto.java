@@ -59,6 +59,7 @@ public record InvitationDto(
         @JsonProperty("confirmations")
         List<ConfirmationDto.Confirm> confirmations,
 
-        String uuid
+        String uuid,
+        WeddingDto wedding
 ) {
 }
