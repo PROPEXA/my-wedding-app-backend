@@ -12,6 +12,8 @@ import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.dto.WeddingDto;
 import org.wedding.app.dto.group.Post;
 import org.wedding.app.dto.group.Update;
+import org.wedding.app.exception.ServiceException;
+import org.wedding.app.security.AuthUtil;
 import org.wedding.app.service.WeddingService;
 
 import java.net.URI;
@@ -58,7 +60,11 @@ public class WeddingController {
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Disable wedding")
     public ResponseEntity<ResponseDto<Object>> disableWedding(@PathVariable Integer weddingId) {
-        weddingService.deleteWeddingById(weddingId);
+        int accountId = AuthUtil.getCurrentUserId()
+                .orElseThrow(() -> new ServiceException(
+                        HttpStatus.BAD_REQUEST,
+                        "No se pudo verificar la identidad del usuario al eliminar la boda"));
+        weddingService.deleteWeddingById(weddingId, accountId);
         return ResponseEntity.ok().body(ResponseDto.builder()
                 .code(HttpStatus.OK.value())
                 .phrase(HttpStatus.OK.getReasonPhrase())
@@ -72,7 +78,11 @@ public class WeddingController {
     public ResponseEntity<ResponseDto<Object>> updateWedding(@Validated(Update.class)
                                                              @RequestBody
                                                              WeddingDto weddingDto) {
-        weddingService.updateWedding(weddingDto);
+        int accountId = AuthUtil.getCurrentUserId()
+                .orElseThrow(() -> new ServiceException(
+                        HttpStatus.BAD_REQUEST,
+                        "No se pudo verificar la identidad del usuario"));
+        weddingService.updateWedding(weddingDto, accountId);
         return ResponseEntity.ok(
                 ResponseDto.builder()
                         .code(HttpStatus.OK.value())
@@ -84,9 +94,17 @@ public class WeddingController {
 
     @GetMapping
     @SecurityRequirement(name = "bearerAuth")
-    @Operation(summary = "Get all my weddings")
-    public ResponseEntity<List<WeddingDto>> getAllMyWeddings() {
-        return ResponseEntity.ok(weddingService.obtainAllMyWeddings());
+    @Operation(summary = "Get all my weddings and filter by status")
+    public ResponseEntity<List<WeddingDto>> getAllMyWeddings(
+            @RequestParam(
+                    name = "status",
+                    required = false,
+                    defaultValue = "A")
+            String status) {
+        int accountId = AuthUtil.getCurrentUserId()
+                .orElseThrow(() -> new ServiceException(
+                        HttpStatus.BAD_REQUEST,
+                        "No se pudo verificar la identidad del usuario al obtener las bodas"));
+        return ResponseEntity.ok(weddingService.obtainAllMyWeddingsByStatus(accountId, status));
     }
-
 }

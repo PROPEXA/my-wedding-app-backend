@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface WeddingService {
 
-    int saveWedding(WeddingDto weddingDto);
+    int saveWedding(WeddingDto wedding);
 
-    WeddingDto obtainWeddingById(Integer id);
+    WeddingDto obtainWeddingById(Integer weddingId);
 
-    void deleteWeddingById(Integer id);
+    void deleteWeddingById(int weddingId, int accountId);
 
-    void updateWedding(WeddingDto weddingDto);
+    void updateWedding(WeddingDto weddingDto, int accountId);
 
-    List<WeddingDto> obtainAllMyWeddings();
+    List<WeddingDto> obtainAllMyWeddingsByStatus(int accountId, String status);
 }

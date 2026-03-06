@@ -21,19 +21,22 @@ public interface TblWeddingRepository extends JpaRepository<TblWedding, Integer>
     Optional<TblWedding> findByIdAndWedAccountAndWedStatus(Integer id, Integer wedAccount, String wedStatus);
 
     /**
-     * Recupera una lista de todas las bodas asociadas a una cuenta específica.
+     * Retrieves a list of wedding records from the database that match the given wedding account identifier
+     * and wedding status.
      *
-     * @param accountId Identificador único de la cuenta asociada a las bodas.
-     * @return Una lista de objetos TblWedding que representan las bodas relacionadas con la cuenta dada.
+     * @param accountId the unique identifier of the wedding account.
+     * @param status    the current status of the wedding (e.g., A = Active, I = Inactive).
+     * @return a list of {@code TblWedding} objects that match the specified account and status, or an empty list
+     * if no matching records are found.
      */
-    List<TblWedding> findAllByWedAccount(Integer accountId);
+    List<TblWedding> findAllByWedAccountAndWedStatus(Integer accountId, String status);
 
     /**
      * Verifica si existe un registro de boda en la base de datos que coincida con el identificador de la boda
      * y el identificador de la cuenta de boda proporcionados.
      *
-     * @param id         Identificador único de la boda.
-     * @param accountId  Identificador único de la cuenta asociada a la boda.
+     * @param id        Identificador único de la boda.
+     * @param accountId Identificador único de la cuenta asociada a la boda.
      * @return true si existe un registro de boda que coincida con los parámetros proporcionados, false en caso contrario.
      */
     boolean existsByIdAndWedAccount(Integer id, Integer accountId);

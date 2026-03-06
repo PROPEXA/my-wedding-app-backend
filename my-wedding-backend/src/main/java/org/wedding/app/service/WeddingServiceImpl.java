@@ -3,6 +3,7 @@ package org.wedding.app.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,27 +24,29 @@ public class WeddingServiceImpl implements WeddingService {
 
     @Override
     @Transactional
-    public int saveWedding(WeddingDto weddingDto) {
-        TblWedding tblWedding = WeddingMapper.toEntity(weddingDto);
+    public int saveWedding(WeddingDto wedding) {
+        TblWedding tblWedding = WeddingMapper.toEntity(wedding);
         final TblWedding persisted = tblWeddingRepository.save(tblWedding);
         return persisted.getId();
     }
 
     @Override
-    @Cacheable(value = "wedding", key = "#id")
-    public WeddingDto obtainWeddingById(Integer id) {
+    @Cacheable(value = "wedding", key = "#weddingId")
+    public WeddingDto obtainWeddingById(Integer weddingId) {
         int accountId = getAccountId();
-        TblWedding tblAccount = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(id, accountId, "A")
+        TblWedding tblAccount = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(weddingId, accountId, "A")
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "No se encontró la boda solicitada o se encuentra inactiva"));
         return WeddingMapper.toDto(tblAccount);
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "wedding", key = "#id")
-    public void deleteWeddingById(Integer id) {
-        int accountId = getAccountId();
-        tblWeddingRepository.findByIdAndWedAccountAndWedStatus(id, accountId, "A")
+    @Caching(evict = {
+            @CacheEvict(value = "wedding", key = "#weddingId"),
+            @CacheEvict(value = "weddings", key = "#accountId")
+    })
+    public void deleteWeddingById(int weddingId, int accountId) {
+        tblWeddingRepository.findByIdAndWedAccountAndWedStatus(weddingId, accountId, "A")
                 .ifPresent((tbl) -> {
                     tbl.setWedStatus("I");
                     tblWeddingRepository.save(tbl);
@@ -52,19 +55,21 @@ public class WeddingServiceImpl implements WeddingService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "wedding", key = "#weddingDto.id()")
-    public void updateWedding(WeddingDto weddingDto) {
-        final int accountId = getAccountId();
-        final TblWedding persisted = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(weddingDto.id(), accountId, "A")
+    @Caching(evict = {
+            @CacheEvict(value = "wedding", key = "#wedding.id()"),
+            @CacheEvict(value = "weddings", key = "#accountId")
+    })
+    public void updateWedding(WeddingDto wedding, int accountId) {
+        final TblWedding persisted = tblWeddingRepository.findByIdAndWedAccountAndWedStatus(wedding.id(), accountId, "A")
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "La boda a actualizar no existe"));
         tblWeddingRepository.save(
-                WeddingMapper.toUpdate(weddingDto, persisted));
+                WeddingMapper.toUpdate(wedding, persisted));
     }
 
     @Override
-    public List<WeddingDto> obtainAllMyWeddings() {
-        int accountId = getAccountId();
-        List<TblWedding> myWeddings = tblWeddingRepository.findAllByWedAccount(accountId);
+    @Cacheable(value = "weddings", key = "#accountId")
+    public List<WeddingDto> obtainAllMyWeddingsByStatus(int accountId, String status) {
+        List<TblWedding> myWeddings = tblWeddingRepository.findAllByWedAccountAndWedStatus(accountId, status);
         if (myWeddings.isEmpty()) {
             throw new ServiceException(HttpStatus.NOT_FOUND, "No hay bodas registradas");
         }
