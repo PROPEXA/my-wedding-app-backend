@@ -56,6 +56,9 @@ public record InvitationDto(
         @JsonProperty("events")
         List<EventDto> events,
 
+        @JsonProperty("confirmations")
+        List<ConfirmationDto.Confirm> confirmations,
+
         String uuid
 ) {
 }

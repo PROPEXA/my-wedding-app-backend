@@ -1,7 +1,9 @@
 package org.wedding.app.mapper;
 
+import org.wedding.app.dto.ConfirmationDto;
 import org.wedding.app.dto.InvitationDto;
 import org.wedding.app.dto.InvitationGuestDto;
+import org.wedding.app.dto.enums.ConfirmationType;
 import org.wedding.app.model.TblInvitation;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public final class InvitationMapper {
                 .build();
     }
 
-    public static InvitationDto toDto(TblInvitation entity, boolean withEvents) {
+    public static InvitationDto toDto(TblInvitation entity, boolean withEvents, boolean withConfirmations) {
         return new InvitationDto(
                 entity.getId(),
                 entity.getInvTitle(),
@@ -41,6 +43,19 @@ public final class InvitationMapper {
                 entity.getGuests(),
                 null,
                 withEvents ? entity.getEvents().stream().map(EventMapper::toDto).toList() : null,
+                withConfirmations ? entity.getEventInvitations().stream()
+                        .map(e -> {
+                            return switch (e.getEviStatus()) {
+                                case "C" ->
+                                        new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.CONFIRM);
+                                case "D" ->
+                                        new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.DECLINE);
+                                case "P" ->
+                                        new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.PENDING);
+                                default -> null;
+                            };
+                        })
+                        .toList() : null,
                 entity.getInvUuid()
         );
     }

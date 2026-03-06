@@ -88,7 +88,7 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         final int authId = AuthUtil.getCurrentUserId().orElseThrow();
         TblInvitation invitation = tblInvitationRepository.findByIdAndInvCreatedBy(id, authId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Invitación no encontrada"));
-        return InvitationMapper.toDto(invitation, true);
+        return InvitationMapper.toDto(invitation, true,false);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         if (invitations.isEmpty()) {
             throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para el evento solicitado");
         }
-        return invitations.stream().map(i -> InvitationMapper.toDto(i, false)).toList();
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false,false)).toList();
     }
 
     @Override
@@ -114,14 +114,14 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         if(invitations.isEmpty()){
             throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para la boda solicitada");
         }
-        return invitations.stream().map(i -> InvitationMapper.toDto(i, false)).toList();
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false,false)).toList();
     }
 
     @Override
     public InvitationDto obtainInvitationByIdAndUuid(int id, String uuid) {
         final TblInvitation invitation = tblInvitationRepository.findByIdAndInvUuid(id, uuid)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Invitación no encontrada"));
-        return InvitationMapper.toDto(invitation, true);
+        return InvitationMapper.toDto(invitation, true,true);
     }
 
     @Override

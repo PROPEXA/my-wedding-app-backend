@@ -85,6 +85,9 @@ public class TblInvitation {
     )
     private List<TblEvent> events;
 
+    @OneToMany(mappedBy = "eviInvitation", fetch = FetchType.LAZY)
+    private List<TblEventInvitation> eventInvitations;
+
     @Column(name = "inv_uuid")
     private String invUuid;
 }
