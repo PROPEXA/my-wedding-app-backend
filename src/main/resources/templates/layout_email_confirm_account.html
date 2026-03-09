@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout_email_container :: layout(~{::frg_confirmar_cuenta})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<div th:fragment="frg_confirmar_cuenta">
+
+    <h1 class="script-title">Verificación de Cuenta</h1>
+
+    <p class="body-text">
+        Hola <strong th:text="${fullName}"></strong>,<br><br>
+        <!--/*@thymesVar id="confirmationCode" type="java.lang.String"*/-->
+        Tu código de confirmación es: <strong th:text="${confirmationCode}"/>
+        <br>
+        Presiona el siguiente botón para confirmar tu cuenta.
+        <br><br>
+        <!--/*@thymesVar id="fullUrl" type="java.lang.String"*/-->
+        <a th:href="${fullUrl}" class="btn-elegant">Confirmar Cuenta</a>
+        <br><br>
+    </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/0001-initial-definition-db.sql
+  - include:
+      file: db/changelog/0002-token-repository.sql
+  - include:
+      file: db/changelog/0003-confirm-account.sql
+  - include:
+      file: db/changelog/0004-alter-tables-to-add-account-id.sql
+  - include:
+      file: db/changelog/0005-alter-lat-lng-event.sql
+  - include:
+      file: db/changelog/0006-statistics-table.sql
+  - include:
+      file: db/changelog/0007-anter-event-timestamp.sql
+  - include:
+      file: db/changelog/0008-trigger-update-statistic-when-delete.sql
+  - include:
+      file: db/changelog/0009-alter-invitations-table-add-uuid-token.sql
