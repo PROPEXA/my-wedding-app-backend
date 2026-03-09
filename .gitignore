@@ -33,3 +33,4 @@ build/
 .vscode/
 /wedding-invitations.db
 my-wedding-frontend/.env
+.env
