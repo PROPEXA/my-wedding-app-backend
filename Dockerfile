@@ -79,7 +79,6 @@ RUN apk add --no-cache \
     && adduser -S ${APP_USER} -G ${APP_GROUP} \
     && mkdir -p ${APP_HOME} \
     && chown -R ${APP_USER}:${APP_GROUP} ${APP_HOME} \
-    # Security hardening
     && rm -rf /var/cache/apk/* \
     && rm -rf /tmp/*
 
