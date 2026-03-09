@@ -35,7 +35,11 @@ public class WeddingController {
                                                            @RequestBody
                                                            WeddingDto weddingDto
     ) {
-        int weddingId = weddingService.saveWedding(weddingDto);
+        int accountId = AuthUtil.getCurrentUserId().orElseThrow(() -> new ServiceException(
+                HttpStatus.BAD_REQUEST,
+                "No se pudo verificar la identidad del usuario"
+        ));
+        int weddingId = weddingService.saveWedding(weddingDto, accountId);
         return ResponseEntity.created(buildUri(weddingId))
                 .body(ResponseDto.builder()
                         .code(HttpStatus.CREATED.value())

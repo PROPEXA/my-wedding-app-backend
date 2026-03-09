@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface WeddingService {
 
-    int saveWedding(WeddingDto wedding);
+    int saveWedding(WeddingDto wedding, int accountId);
 
     WeddingDto obtainWeddingById(Integer weddingId);
 

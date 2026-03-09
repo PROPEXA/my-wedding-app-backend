@@ -24,7 +24,10 @@ public class WeddingServiceImpl implements WeddingService {
 
     @Override
     @Transactional
-    public int saveWedding(WeddingDto wedding) {
+    @Caching(evict = {
+            @CacheEvict(value = "weddings", key = "#accountId"),
+    })
+    public int saveWedding(WeddingDto wedding, int accountId) {
         TblWedding tblWedding = WeddingMapper.toEntity(wedding);
         final TblWedding persisted = tblWeddingRepository.save(tblWedding);
         return persisted.getId();
