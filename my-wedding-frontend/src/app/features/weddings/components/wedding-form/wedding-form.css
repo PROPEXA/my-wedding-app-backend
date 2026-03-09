@@ -1,9 +1,0 @@
-/**
- * Wedding Form Styles
- * Formulario para crear/editar bodas
- */
-
-:host {
-  display: block;
-  min-height: 100%;
-}
