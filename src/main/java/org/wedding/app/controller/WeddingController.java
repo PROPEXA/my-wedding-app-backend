@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.wedding.app.dto.PrincipalDto;
 import org.wedding.app.dto.ResponseDto;
 import org.wedding.app.dto.WeddingDto;
 import org.wedding.app.dto.group.Post;
