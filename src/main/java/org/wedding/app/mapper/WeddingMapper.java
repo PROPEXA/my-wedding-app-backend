@@ -71,7 +71,7 @@ public final class WeddingMapper {
                 entity.getWedGroomTel(),
                 entity.getWedRegister(),
                 entity.getWedUpdated(),
-                entity.getWedStatus().equalsIgnoreCase("A")
+                entity.getWedStatus().equalsIgnoreCase("A"),null
         );
     }
 

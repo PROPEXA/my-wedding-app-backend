@@ -9,6 +9,7 @@ import org.wedding.app.dto.group.Update;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link org.wedding.app.model.TblWedding}
@@ -73,6 +74,10 @@ public record WeddingDto(
         LocalDateTime modificationDate,
 
         @JsonProperty("is_active")
-        Boolean isActive
+        Boolean isActive,
+
+        @JsonProperty("principals")
+        List<PrincipalDto> principals
+
 ) {
 }

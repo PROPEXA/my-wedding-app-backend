@@ -28,7 +28,10 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 4
       pool-name: WeddingAppHikariCP
-
+  cache:
+    type: caffeine
+    caffeine:
+      spec: expireAfterAccess=20m,maximumSize=1000
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
