@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface PrincipalService {
 
-    int saveNewPrincipal(PrincipalDto principal);
+    void saveNewPrincipals(List<PrincipalDto> principalList, int weddingId, int accountId);
 
-    void saveNewPrincipalList(List<PrincipalDto> principalList, int weddingId);
+    void saveNewPrincipals(List<PrincipalDto> principalList, int weddingId);
 
-    PrincipalDto obtainPrincipalByWeddingIdAndPrincipalId(int weddingId, int principalId);
+    PrincipalDto obtainPrincipalByWeddingIdAndPrincipalId(int weddingId, int principalId, int accountId);
 
-    List<PrincipalDto> obtainPrincipalByWeddingId(int weddingId);
+    List<PrincipalDto> obtainPrincipalByWeddingId(int weddingId, int accountId);
 
-    void deletePrincipalByWeddingIdAndPrincipalId(int weddingId, int principalId);
+    void deletePrincipalByWeddingIdAndPrincipalId(int weddingId, int principalId, int accountId);
 
-    void updatePrincipal(PrincipalDto principal);
+    void updatePrincipal(PrincipalDto principal, int weddingId, int principalId, int accountId);
 }

@@ -3,10 +3,7 @@ package org.wedding.app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -68,10 +66,10 @@ public class TblWeddingPrincipal {
     @Column(name = "wp_status", nullable = false, length = 1)
     private String wpStatus;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wp_wedding", insertable = false, updatable = false)
-    private TblWedding wpWeddingObj;
+//    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "wp_wedding", insertable = false, updatable = false)
+//    private TblWedding wpWeddingObj;
 
     @Column(name = "wp_wedding", nullable = false)
     private Integer wpWedding;

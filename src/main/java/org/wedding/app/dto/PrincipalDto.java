@@ -52,6 +52,7 @@ public record PrincipalDto(
         @JsonProperty("wedding_id")
         Integer weddingId,
 
+        @NotNull(message = "Código de tipo de relación es requerido", groups = {Post.class, Update.class})
         @JsonProperty("relationship_id")
         Integer relationshipId,
 

@@ -15,6 +15,11 @@ public enum Gender {
     }
 
     public static Gender fromCode(String code) {
-        return Gender.valueOf(code);
+        for (Gender gender : Gender.values()) {
+            if (gender.code.equals(code)) {
+                return gender;
+            }
+        }
+        throw new IllegalArgumentException("Código de género no válido: " + code);
     }
 }
