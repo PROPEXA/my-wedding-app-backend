@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.wedding.app.dto.PrincipalDto;
 import org.wedding.app.dto.WeddingDto;
 //import org.wedding.app.dto.group.Post;
 import org.wedding.app.exception.ServiceException;

@@ -1,0 +1,41 @@
+# ==============================================================================
+# Docker Compose - My Wedding Backend
+# ==============================================================================
+services:
+# ----------------------------------------------------------------------------
+# PostgreSQL Database
+# ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: wedding-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: db_myweddingapp
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - my-wedding-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d db_myweddingapp" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+# ==============================================================================
+# Networks
+# ==============================================================================
+networks:
+  my-wedding-network:
+    name: my-wedding-network
+    driver: bridge
+# ==============================================================================
+# Volumes
+# ==============================================================================
+volumes:
+  postgres_data:
+    name: wedding-postgres-data

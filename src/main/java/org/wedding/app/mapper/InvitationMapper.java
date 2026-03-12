@@ -73,12 +73,10 @@ public final class InvitationMapper {
     private static List<ConfirmationDto.Confirm> confirmations(TblInvitation entity) {
         return entity.getEventInvitations().stream()
                 .filter(e -> e.getEviStatus().equalsIgnoreCase("C") || e.getEviStatus().equalsIgnoreCase("D"))
-                .map(e -> {
-                    return switch (e.getEviStatus()) {
-                        case "C" -> new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.CONFIRM);
-                        case "D" -> new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.DECLINE);
-                        default -> null;
-                    };
+                .map(e -> switch (e.getEviStatus()) {
+                    case "C" -> new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.CONFIRM);
+                    case "D" -> new ConfirmationDto.Confirm(e.getId().getEviEvent(), ConfirmationType.DECLINE);
+                    default -> null;
                 })
                 .toList();
     }

@@ -1,34 +1,7 @@
 # ==============================================================================
 # Docker Compose - My Wedding Backend
-# Enterprise-grade configuration with PostgreSQL 16
 # ==============================================================================
-
 services:
-  # ----------------------------------------------------------------------------
-  # PostgreSQL Database
-  # ----------------------------------------------------------------------------
-#  postgres:
-#    image: postgres:16-alpine
-#    container_name: wedding-postgres
-#    restart: unless-stopped
-#    environment:
-#      POSTGRES_DB: db_myweddingapp
-#      POSTGRES_USER: ${DB_USER}
-#      POSTGRES_PASSWORD: ${DB_PASS}
-#      PGDATA: /var/lib/postgresql/data/pgdata
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    ports:
-#      - "5433:5432"
-#    networks:
-#      - my-wedding-network
-#    healthcheck:
-#      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d db_myweddingapp"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
-#      start_period: 30s
-
   # ----------------------------------------------------------------------------
   # Spring Boot Backend Application
   # ----------------------------------------------------------------------------
@@ -39,9 +12,6 @@ services:
     image: ${IMAGE_NAME:-my-wedding-backend}:${IMAGE_TAG:-latest}
     container_name: wedding-backend
     restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
       # Database Configuration
       SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/db_myweddingapp}
@@ -87,12 +57,4 @@ services:
 networks:
   my-wedding-network:
     name: my-wedding-network
-    driver: bridge
-
-# ==============================================================================
-# Volumes
-# ==============================================================================
-volumes:
-  postgres_data:
-    name: wedding-postgres-data
-
+    external: true
