@@ -19,6 +19,7 @@ import org.wedding.app.repository.TblEventInvitationRepository;
 import org.wedding.app.repository.TblEventRepository;
 import org.wedding.app.repository.TblInvitationRepository;
 import org.wedding.app.security.AuthUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         final int authId = AuthUtil.getCurrentUserId().orElseThrow();
         TblInvitation invitation = tblInvitationRepository.findByIdAndInvCreatedBy(id, authId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Invitación no encontrada"));
-        return InvitationMapper.toDto(invitation, true,false, false);
+        return InvitationMapper.toDto(invitation, true, false, false);
     }
 
     @Override
@@ -104,24 +105,24 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         if (invitations.isEmpty()) {
             throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para el evento solicitado");
         }
-        return invitations.stream().map(i -> InvitationMapper.toDto(i, false,false,false)).toList();
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false, false, false)).toList();
     }
 
     @Override
     public List<InvitationDto> obtainAllInvitationsByWeddingId(Integer weddingId, Pageable pageable) {
         Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").descending());
-        List<TblInvitation> invitations = tblEventInvitationRepository.findByWeddingIdAndPageable(weddingId,newPageable);
-        if(invitations.isEmpty()){
+        List<TblInvitation> invitations = tblEventInvitationRepository.findByWeddingIdAndPageable(weddingId, newPageable);
+        if (invitations.isEmpty()) {
             throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para la boda solicitada");
         }
-        return invitations.stream().map(i -> InvitationMapper.toDto(i, false,false,false)).toList();
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false, false, false)).toList();
     }
 
     @Override
     public InvitationDto obtainInvitationByIdAndUuid(int id, String uuid) {
         final TblInvitation invitation = tblInvitationRepository.findByIdAndInvUuid(id, uuid)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, "Invitación no encontrada"));
-        return InvitationMapper.toDto(invitation, true,true,true);
+        return InvitationMapper.toDto(invitation, true, true, true, true);
     }
 
     @Override

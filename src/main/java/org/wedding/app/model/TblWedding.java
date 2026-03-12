@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Representa la entidad de boda en la base de datos que se almacena en la tabla "tbl_weddings".
@@ -92,4 +93,7 @@ public class TblWedding {
     @ColumnDefault("'A'")
     @Column(name = "wed_status", length = 1)
     private String wedStatus;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "wpWedding")
+    private List<TblWeddingPrincipal> wedPrincipal;
 }

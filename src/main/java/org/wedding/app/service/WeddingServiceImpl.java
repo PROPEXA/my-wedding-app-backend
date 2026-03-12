@@ -1,5 +1,7 @@
 package org.wedding.app.service;
 
+//import jakarta.validation.ConstraintViolation;
+//import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wedding.app.dto.WeddingDto;
+//import org.wedding.app.dto.group.Post;
 import org.wedding.app.exception.ServiceException;
 import org.wedding.app.mapper.WeddingMapper;
 import org.wedding.app.model.TblWedding;
@@ -15,12 +18,16 @@ import org.wedding.app.repository.TblWeddingRepository;
 import org.wedding.app.security.AuthUtil;
 
 import java.util.List;
+//import java.util.Set;
+//import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WeddingServiceImpl implements WeddingService {
 
     private final TblWeddingRepository tblWeddingRepository;
+    private final PrincipalService principalService;
+//    private final Validator validator;
 
     @Override
     @Transactional
@@ -29,7 +36,10 @@ public class WeddingServiceImpl implements WeddingService {
     })
     public int saveWedding(WeddingDto wedding, int accountId) {
         TblWedding tblWedding = WeddingMapper.toEntity(wedding);
-        final TblWedding persisted = tblWeddingRepository.save(tblWedding);
+        final TblWedding persisted = tblWeddingRepository.saveAndFlush(tblWedding);
+        if (null != wedding.principals() && !wedding.principals().isEmpty()) {
+            principalService.saveNewPrincipals(wedding.principals(), persisted.getId());
+        }
         return persisted.getId();
     }
 

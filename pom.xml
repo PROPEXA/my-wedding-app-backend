@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.wedding</groupId>
     <artifactId>my-wedding-backend</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <name>Mt Wedding Backend</name>
     <description>Backend for My Wedding App Online</description>
     <developers>
@@ -100,6 +100,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
     </dependencies>
     <build>

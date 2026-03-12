@@ -1,8 +1,11 @@
 package org.wedding.app.mapper;
 
 import org.apache.commons.text.WordUtils;
+import org.wedding.app.dto.PrincipalDto;
 import org.wedding.app.dto.WeddingDto;
 import org.wedding.app.model.TblWedding;
+
+import java.util.List;
 
 public final class WeddingMapper {
 
@@ -55,7 +58,7 @@ public final class WeddingMapper {
      * @param entity la entidad TblWedding que contiene los datos a convertir.
      * @return un objeto de tipo WeddingDto con los datos mapeados desde la entidad TblWedding.
      */
-    public static WeddingDto toDto(TblWedding entity) {
+    private static WeddingDto toDto(TblWedding entity, List<PrincipalDto> principals) {
         return new WeddingDto(
                 entity.getId(),
                 entity.getWedAccount(),
@@ -71,8 +74,23 @@ public final class WeddingMapper {
                 entity.getWedGroomTel(),
                 entity.getWedRegister(),
                 entity.getWedUpdated(),
-                entity.getWedStatus().equalsIgnoreCase("A")
+                entity.getWedStatus().equalsIgnoreCase("A"),
+                principals
         );
+    }
+
+    public static WeddingDto toDto(TblWedding entity) {
+        return toDto(entity, null);
+    }
+
+    public static WeddingDto toDto(TblWedding entity, boolean withPrincipals) {
+        if (withPrincipals) {
+            List<PrincipalDto> principals = entity.getWedPrincipal().stream()
+                    .map(p -> PrincipalMapper.toDto(p, true))
+                    .toList();
+            return toDto(entity, principals);
+        }
+        return toDto(entity, null);
     }
 
 }

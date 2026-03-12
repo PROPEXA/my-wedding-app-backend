@@ -17,3 +17,11 @@ databaseChangeLog:
       file: db/changelog/0008-trigger-update-statistic-when-delete.sql
   - include:
       file: db/changelog/0009-alter-invitations-table-add-uuid-token.sql
+  - include:
+      file: db/changelog/0010-add-new-tables-and-feature.sql
+  - include:
+      file: db/changelog/0011-add-sequences-to-new-tables.sql
+  - include:
+      file: db/changelog/0012-add-new-tables.sql
+  - include:
+      file: db/changelog/0013-drop-columns.sql
