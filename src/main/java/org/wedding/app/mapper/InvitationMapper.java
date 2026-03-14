@@ -4,6 +4,7 @@ import org.wedding.app.dto.*;
 import org.wedding.app.dto.enums.ConfirmationType;
 import org.wedding.app.model.TblInvitation;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public final class InvitationMapper {
         }
         return TblInvitation.builder()
                 .invTitle(dto.title().toUpperCase())
-                .invQuantity(dto.quantity())
+                .invQuantity(dto.quantity() == null ? BigDecimal.valueOf(0) : dto.quantity())
                 .invRelation(dto.relationId())
                 .invTablenum(dto.tableNumber() == null ? "N/A" : dto.tableNumber())
                 .invMaxconf(dto.maxConfirmation())
