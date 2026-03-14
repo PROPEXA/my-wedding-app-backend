@@ -22,7 +22,7 @@ public record InvitationDto(
         String title,
 
         @JsonProperty("quantity")
-        @NotNull(message = "La cantidad de invitados es requerida", groups = {Post.class, Update.class})
+        //@NotNull(message = "La cantidad de invitados es requerida", groups = {Post.class, Update.class})
         BigDecimal quantity,
 
         @JsonProperty("relation_id")
