@@ -105,7 +105,7 @@ public class WeddingInvitationServiceImpl implements WeddingInvitationService {
         if (invitations.isEmpty()) {
             throw new ServiceException(HttpStatus.NOT_FOUND, "No se encontraron invitaciones para el evento solicitado");
         }
-        return invitations.stream().map(i -> InvitationMapper.toDto(i, false, false, false)).toList();
+        return invitations.stream().map(i -> InvitationMapper.toDto(i, false, true, false)).toList();
     }
 
     @Override
